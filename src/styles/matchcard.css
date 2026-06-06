@@ -1,0 +1,293 @@
+/* ─── MatchCard shared atoms ─────────────────────────────────────────────── */
+
+.mc-live-pill {
+  font-size: 0.62rem;
+  background: var(--live);
+  color: #fff;
+}
+
+.mc-ft-badge {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mc-pst-badge {
+  font-size: 0.65rem;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+/* ─── Row card ───────────────────────────────────────────────────────────── */
+
+.mc-row-inner {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  align-items: stretch;
+}
+
+.mc-row-left {
+  padding: 14px 16px;
+  border-right: 1px solid var(--glass-bd);
+  min-width: 0;
+}
+
+.mc-row-team-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--txt);
+}
+
+.mc-row-score {
+  font-family: "Geist Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.mc-row-score--winner {
+  color: var(--accent);
+}
+
+.mc-row-score--loser {
+  color: var(--mut);
+}
+
+.mc-row-right {
+  padding: 14px 12px;
+  width: 80px;
+}
+
+.mc-row-time {
+  font-family: "Geist Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.mc-row-ampm {
+  font-size: 11px;
+  color: var(--meta-text);
+  margin-top: 2px;
+}
+
+.mc-row-bell {
+  width: 32px;
+  height: 32px;
+  color: var(--mut);
+  background: var(--glass);
+  border: 1px solid var(--glass-bd);
+}
+
+.mc-row-bell--active {
+  color: var(--accent);
+  background: rgba(255, 107, 43, 0.1);
+  border: 1px solid var(--glass-bd);
+}
+
+/* ─── Hero card ──────────────────────────────────────────────────────────── */
+
+.mc-hero-wrap {
+  position: relative;
+}
+
+.mc-hero-pill-top {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.mc-hero-pill-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  z-index: 2;
+}
+
+.mc-hero-live-pill {
+  background: var(--live);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.mc-hero-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.mc-hero-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mc-hero-main--live {
+  padding: 10px 24px 14px;
+}
+
+.mc-hero-main--static {
+  padding: 24px 24px 14px;
+}
+
+.mc-hero-team-col {
+  width: 90px;
+}
+
+.mc-hero-team-name {
+  color: var(--txt);
+}
+
+.mc-hero-sub-rank {
+  color: var(--sub-text);
+}
+
+.mc-hero-score {
+  font-family: "Geist Mono", monospace;
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  letter-spacing: -0.04em;
+  color: var(--txt);
+}
+
+.mc-hero-time-big {
+  font-family: "Geist Mono", monospace;
+  font-size: 2.2rem;
+  color: var(--txt);
+}
+
+.mc-hero-ampm {
+  color: var(--meta-text);
+}
+
+.mc-hero-events {
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--card-bd);
+}
+
+.mc-hero-event-text {
+  font-size: 11px;
+  color: var(--meta-bright);
+  line-height: 1.4;
+}
+
+.mc-hero-footer {
+  font-size: 11px;
+  color: var(--meta-text);
+  border-top: 1px solid var(--card-bd);
+}
+
+.mc-hero-live-spacer {
+  height: 14px;
+}
+
+/* ─── Pill (shared between Hero and HeroWithCountdown) ──────────────────── */
+
+.mc-pill {
+  font-family: "Geist Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pill-txt);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-bd);
+  border-radius: 20px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ─── Compact card ───────────────────────────────────────────────────────── */
+
+.mc-compact-left {
+  border-right: 1px solid var(--glass-bd);
+}
+
+.mc-compact-team-name--default {
+  color: var(--txt);
+}
+
+.mc-compact-team-name--dim {
+  color: var(--mut);
+}
+
+.mc-compact-score {
+  font-family: "Geist Mono", monospace;
+}
+
+.mc-compact-score--winner {
+  color: var(--accent);
+}
+
+.mc-compact-score--loser {
+  color: var(--mut);
+}
+
+.mc-compact-right {
+  min-width: 48px;
+}
+
+.mc-compact-live-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--live);
+}
+
+.mc-compact-time {
+  font-family: "Geist Mono", monospace;
+  color: var(--txt);
+}
+
+/* ─── HeroCardWithCountdown ──────────────────────────────────────────────── */
+
+.mc-cd-units {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 1.5vw, 8px);
+}
+
+.mc-cd-unit-gap {
+  gap: clamp(4px, 1.5vw, 8px);
+}
+
+.mc-cd-unit-value {
+  font-family: "Geist Mono", monospace;
+  font-size: clamp(22px, 6vw, 26px);
+  font-weight: 700;
+  color: var(--txt);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+@media (min-width: 1024px) {
+  .mc-cd-unit-value { font-size: 22px; }
+  .mc-cd-sep        { font-size: 18px; margin-bottom: 14px; }
+  .mc-cd-units      { gap: 8px; }
+  .mc-cd-unit-gap   { gap: 8px; }
+}
+
+.mc-cd-unit-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--meta-text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mc-cd-sep {
+  font-family: "Geist Mono", monospace;
+  font-size: clamp(14px, 3vw, 20px);
+  color: var(--sub-text);
+  line-height: 1;
+  margin-bottom: clamp(10px, 2vw, 14px);
+}

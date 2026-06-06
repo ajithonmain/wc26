@@ -1,0 +1,46 @@
+/* ─── App shell ──────────────────────────────────────────────────────────── */
+
+.app-root {
+  background: var(--grad-fixed);
+  background-attachment: fixed;
+}
+
+/* ─── Mobile header ──────────────────────────────────────────────────────── */
+
+.app-mobile-header {
+  height: 64px;
+  background: var(--tabbar);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--glass-bd);
+}
+
+.app-mobile-brand-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+}
+
+.app-mobile-greeting {
+  color: var(--dim);
+}
+
+.app-mobile-title {
+  color: var(--txt);
+}
+
+.app-mobile-bell {
+  width: 36px;
+  height: 36px;
+  color: var(--mut);
+}
+
+/* ─── Coming soon placeholder ────────────────────────────────────────────── */
+
+.app-coming-soon {
+  color: var(--dim);
+}
+
+.app-coming-soon-label {
+  color: var(--accent);
+}

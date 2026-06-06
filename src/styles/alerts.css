@@ -1,0 +1,208 @@
+/* ─── Alerts view ────────────────────────────────────────────────────────── */
+
+.alerts-title {
+  color: var(--txt);
+}
+
+.alerts-subtitle {
+  color: var(--meta-text);
+}
+
+/* ─── Clear button ───────────────────────────────────────────────────────── */
+
+.alerts-clear-btn {
+  background: var(--glass);
+  color: var(--nav-text);
+  border: 1px solid var(--glass-bd);
+}
+
+/* ─── Tab buttons ────────────────────────────────────────────────────────── */
+
+.alerts-tab {
+  background: var(--glass);
+  color: var(--mut);
+  border: 1px solid var(--glass-bd);
+  box-shadow: none;
+}
+
+.alerts-tab--active {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(255, 106, 43, 0.3);
+}
+
+.alerts-tab-badge {
+  background: var(--accent);
+  color: #fff;
+}
+
+.alerts-tab-badge--active {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* ─── Browser warning banner ─────────────────────────────────────────────── */
+
+.alerts-warning {
+  padding: 9px 12px;
+  background: rgba(180, 100, 0, 0.12);
+  border: 1px solid rgba(180, 100, 0, 0.25);
+}
+
+.alerts-warning-icon {
+  color: #b45309;
+  flex-shrink: 0;
+}
+
+.alerts-warning-text {
+  color: var(--txt);
+}
+
+/* ─── Empty state ────────────────────────────────────────────────────────── */
+
+.alerts-empty {
+  color: var(--dim);
+}
+
+.alerts-empty-msg {
+  color: var(--mut);
+}
+
+.alerts-empty-sub {
+  color: var(--dim);
+}
+
+/* ─── Day label ──────────────────────────────────────────────────────────── */
+
+.alerts-day-label {
+  color: var(--nav-text);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* ─── Alert card ─────────────────────────────────────────────────────────── */
+
+.alert-card {
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.alert-card-vs {
+  color: var(--meta-text);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.alert-card-team {
+  color: var(--txt);
+}
+
+.alert-card-remove-btn {
+  width: 26px;
+  height: 26px;
+  color: var(--nav-icon);
+  background: var(--glass-2);
+  border: 1px solid var(--card-bd);
+}
+
+.alert-card-meta {
+  color: var(--meta-text);
+  font-size: 12px;
+}
+
+.alert-card-past {
+  color: var(--mut);
+}
+
+/* ─── Notify chips ───────────────────────────────────────────────────────── */
+
+.alert-notify-label {
+  color: var(--meta-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.alert-chip {
+  background: var(--glass-2);
+  color: var(--txt);
+  border: 1px solid var(--card-bd);
+}
+
+.alert-chip--active {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.alert-fires-in {
+  color: var(--meta-text);
+}
+
+/* ─── Calendar button ────────────────────────────────────────────────────── */
+
+.alert-cal-btn {
+  color: var(--nav-text);
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.alert-cal-btn:hover {
+  background: var(--glass-2);
+}
+
+/* ─── Confirm modal ──────────────────────────────────────────────────────── */
+
+.alerts-modal-overlay {
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+}
+
+.alerts-modal {
+  background: var(--modal-bg);
+  border-radius: 16px;
+  padding: 24px 20px;
+  width: 300px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.alerts-modal-title {
+  color: var(--modal-text);
+}
+
+.alerts-modal-sub {
+  color: var(--modal-sub);
+}
+
+.alerts-modal-cancel-btn {
+  background: var(--modal-btn-bg);
+  color: var(--modal-btn-text);
+}
+
+.alerts-modal-clear-btn {
+  background: rgba(255, 59, 71, 0.1);
+  color: #e11d48;
+}
+
+/* ─── Undo toast ─────────────────────────────────────────────────────────── */
+
+.alerts-toast {
+  background: #111;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  z-index: 200;
+}
+
+.alerts-toast-undo {
+  color: #ff6b2b;
+}

@@ -1,0 +1,327 @@
+/* ─── Bracket card ─────────────────────────────────────────────────── */
+
+.bc {
+  border-radius: 10px;
+  padding: 8px 10px;
+  height: 88px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.bc-date {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--nav-text);
+}
+
+.bc-badge-ft {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--nav-text);
+  border: 1px solid var(--card-bd);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.bc-badge-live {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--live);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.bc-badge-time {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--nav-text);
+}
+
+.bc-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* ─── Team row ──────────────────────────────────────────────────────── */
+
+.bc-team {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  position: relative;
+}
+
+.bc-team-shield {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--glass-2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.bc-team-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt);
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bc-team-name--placeholder {
+  color: var(--meta-text);
+}
+
+.bc-team-name--winner {
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.bc-team-name--loser {
+  color: var(--meta-text);
+}
+
+.bc-team-score {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: "Geist Mono", monospace;
+  flex-shrink: 0;
+  min-width: 14px;
+  text-align: right;
+  color: var(--txt);
+}
+
+.bc-team-score--loser {
+  color: var(--meta-text);
+}
+
+.bc-team-arrow {
+  font-size: 10px;
+  color: var(--accent);
+  position: absolute;
+  right: -10px;
+}
+
+/* ─── Mobile horizontal scroll container ───────────────────────────── */
+
+.ko-mobile-scroll {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ko-mobile-col {
+  width: 66vw;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+/* ─── Column round label ────────────────────────────────────────────── */
+
+.ko-col-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--meta-text);
+  padding: 0 0 6px;
+  z-index: 1;
+}
+
+/* ─── Column ────────────────────────────────────────────────────────── */
+
+.bracket-col {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+.bracket-card-slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+/* Horizontal connector arm extending right from each card into the gap */
+.bracket-card-slot::after {
+  content: "";
+  position: absolute;
+  right: -31px;
+  top: 50%;
+  width: 30px;
+  height: 1.5px;
+  background: var(--glass-bd);
+  pointer-events: none;
+}
+
+/* Vertical connectors - DESKTOP */
+@media (min-width: 1024px) {
+  .bracket-card-slot:nth-child(odd)::before {
+    content: "";
+    position: absolute;
+    right: -32px;
+    top: 50%;
+    width: 1.5px;
+    height: 98px;
+    background: var(--glass-bd);
+    pointer-events: none;
+  }
+
+  .bracket-card-slot:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    right: -32px;
+    bottom: 50%;
+    width: 1.5px;
+    height: 98px;
+    background: var(--glass-bd);
+    pointer-events: none;
+  }
+}
+
+/* Vertical connectors - MOBILE */
+@media (max-width: 1023px) {
+  .bracket-card-slot:nth-child(odd)::before {
+    content: "";
+    position: absolute;
+    right: -32px;
+    bottom: 50%;
+    width: 1.5px;
+    height: 98px;
+    background: var(--glass-bd);
+    pointer-events: none;
+  }
+
+  .bracket-card-slot:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    right: -32px;
+    top: 50%;
+    width: 1.5px;
+    height: 98px;
+    background: var(--glass-bd);
+    pointer-events: none;
+  }
+}
+
+/* No connector on the last column (Final) */
+.ko-col-last .bracket-card-slot::after,
+.ko-col-last .bracket-card-slot::before {
+  display: none;
+}
+
+/* ─── Mobile tab nav ────────────────────────────────────────────────── */
+
+.bracket-nav-tab {
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nav-text);
+  background: var(--glass);
+  border: 1px solid var(--glass-bd);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bracket-nav-tab--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(255, 106, 43, 0.35);
+}
+
+/* ─── Desktop nav label ─────────────────────────────────────────────── */
+
+.bracket-nav-label {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 4px;
+  color: var(--nav-text);
+  border-bottom: 2px solid var(--card-bd);
+  background: transparent;
+  cursor: pointer;
+}
+
+.bracket-nav-label--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ─── Third-place section ───────────────────────────────────────────── */
+
+.bracket-third-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--meta-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.bracket-third-wrap {
+  margin-top: 20px;
+}
+
+.bracket-third-card {
+  max-width: 200px;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────── */
+
+.knockout-title {
+  color: var(--txt);
+}
+
+.knockout-subtitle {
+  color: var(--meta-text);
+}
+
+/* ─── Bracket container row ─────────────────────────────────────────── */
+
+.bracket-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* ─── Nav button ────────────────────────────────────────────────────── */
+
+.bracket-nav-btn {
+  width: 30px;
+  height: 30px;
+}
+
+.bracket-nav-btn--enabled {
+  color: var(--nav-text);
+  opacity: 1;
+  cursor: pointer;
+}
+
+.bracket-nav-btn--disabled {
+  color: var(--sub-text);
+  opacity: 0.35;
+  cursor: default;
+}

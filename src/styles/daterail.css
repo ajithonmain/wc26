@@ -1,0 +1,97 @@
+/* ─── Date Rail ──────────────────────────────────────────────────────────── */
+
+.dr-wrap {
+  border-bottom: 1px solid var(--glass-bd);
+}
+
+.dr-rail {
+  border-bottom: none;
+}
+
+/* ─── Desktop scroll arrows ─────────────────────────────────────────────── */
+
+.dr-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-bd);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--mut);
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+
+.dr-arrow:hover {
+  background: var(--glass-hi);
+  color: var(--txt);
+}
+
+.dr-arrow--left  { left: 6px; }
+.dr-arrow--right { right: 6px; }
+
+/* ─── Pill ───────────────────────────────────────────────────────────────── */
+
+.dr-pill {
+  min-width: 48px;
+  padding: 10px 10px 12px;
+  border-radius: 14px;
+  background: var(--glass);
+  color: var(--mut);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+
+.dr-pill--active {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 14px rgba(255, 106, 43, 0.4);
+}
+
+/* ─── Pill text ──────────────────────────────────────────────────────────── */
+
+.dr-month {
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--sub-text);
+}
+
+.dr-month--active {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dr-weekday {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  margin-top: 2px;
+  color: var(--meta-text);
+}
+
+.dr-weekday--active {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dr-day {
+  font-family: "Geist Mono", monospace;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 3px;
+  color: var(--nav-text);
+}
+
+.dr-day--active {
+  color: #fff;
+}

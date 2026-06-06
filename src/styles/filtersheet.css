@@ -1,0 +1,229 @@
+/* ─── Backdrop ──────────────────────────────────────────────────────── */
+
+.fs-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+}
+
+.fs-backdrop--desktop {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ─── Sheet (mobile bottom drawer) ─────────────────────────────────── */
+
+.fs-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 201;
+  border-radius: 20px 20px 0 0;
+  padding: 0 20px calc(28px + env(safe-area-inset-bottom));
+  animation: fs-slide-up 0.28s cubic-bezier(0.32, 0, 0.67, 0) both;
+  max-height: 82dvh;
+  overflow-y: auto;
+  background: var(--modal-bg);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.28);
+}
+
+@keyframes fs-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ─── Dropdown (desktop) ────────────────────────────────────────────── */
+
+.fs-dropdown {
+  position: fixed;
+  z-index: 201;
+  width: 300px;
+  border-radius: 18px;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-bd);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 var(--glass-hi);
+  animation: fs-fade-in 0.14s ease both;
+  overflow: hidden;
+}
+
+:root[data-theme="light"] .fs-dropdown {
+  background: rgba(246, 249, 242, 0.94);
+}
+
+:root[data-theme="dark"] .fs-dropdown {
+  background: rgba(14, 22, 32, 0.86);
+}
+
+@keyframes fs-fade-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Handle ────────────────────────────────────────────────────────── */
+
+.fs-handle-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+}
+
+.fs-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--card-bd);
+}
+
+/* ─── Content wrapper ───────────────────────────────────────────────── */
+
+.fs-content {
+  padding-bottom: 4px;
+}
+
+.fs-dropdown .fs-content {
+  padding: 16px 20px 12px;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────── */
+
+.fs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 18px;
+}
+
+.fs-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.fs-clear-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.fs-close-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--modal-btn-bg);
+  color: var(--nav-icon);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ─── Sections ──────────────────────────────────────────────────────── */
+
+.fs-section {
+  margin-bottom: 22px;
+}
+
+.fs-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--meta-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.fs-group-count {
+  color: var(--accent);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ─── Chips ─────────────────────────────────────────────────────────── */
+
+.fs-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fs-group-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.fs-chip {
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nav-text);
+  background: var(--modal-btn-bg);
+  border: 1px solid var(--card-bd);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.fs-chip--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px rgba(255, 106, 43, 0.35);
+}
+
+.fs-chip--disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.fs-teams-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent2);
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.fs-teams-link:hover { opacity: 0.8; }
+
+.fs-chip--group {
+  padding: 7px 4px;
+  text-align: center;
+}
+
+/* ─── Apply button ──────────────────────────────────────────────────── */
+
+.fs-apply-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--modal-btn-bg);
+  color: var(--modal-btn-text);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  margin-top: 4px;
+}
+
+.fs-apply-btn--ready {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255, 106, 43, 0.3);
+}

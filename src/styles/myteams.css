@@ -1,0 +1,99 @@
+/* ─── My Teams view ──────────────────────────────────────────────────────── */
+
+.mt-title {
+  color: var(--txt);
+}
+
+.mt-fav-count-badge {
+  background: var(--glass-2);
+  color: var(--gold);
+  border: 1px solid var(--glass-bd);
+}
+
+.mt-subtitle {
+  color: var(--dim);
+}
+
+/* ─── My Matches section ─────────────────────────────────────────────────── */
+
+.mt-matches-section {
+  border-top: 1px solid var(--glass-bd);
+}
+
+.mt-matches-heading {
+  color: var(--dim);
+}
+
+/* ─── Empty state ────────────────────────────────────────────────────────── */
+
+.mt-empty {
+  color: var(--dim);
+}
+
+.mt-empty-icon {
+  color: var(--faint);
+}
+
+.mt-no-scheduled {
+  color: var(--dim);
+}
+
+/* ─── Day label ──────────────────────────────────────────────────────────── */
+
+.mt-day-label {
+  color: var(--dim);
+}
+
+/* ─── Team chip ──────────────────────────────────────────────────────────── */
+
+.mt-chip-name {
+  color: var(--txt);
+}
+
+.mt-chip-group {
+  color: var(--dim);
+}
+
+/* Dynamic: isFav star color handled via inline (var(--gold) vs var(--faint)) */
+
+/* ─── Fav button on team card ───────────────────────────────────────── */
+
+.mt-card--fav {
+  box-shadow: 0 0 14px rgba(255, 77, 94, 0.2), var(--shadow);
+}
+
+.mt-fav-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nav-icon);
+  background: var(--glass-2);
+  border: 1px solid var(--card-bd);
+  transition: color 0.15s, background 0.15s;
+}
+
+.mt-fav-btn--active {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* ─── Tabs ──────────────────────────────────────────────────────────── */
+
+.mt-tab {
+  background: var(--glass);
+  color: var(--nav-text);
+  border: 1px solid var(--card-bd);
+}
+
+.mt-tab--active {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(255, 106, 43, 0.3);
+}

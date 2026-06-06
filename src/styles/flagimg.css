@@ -1,0 +1,4 @@
+/* ─── FlagImg ────────────────────────────────────────────────────────────── */
+
+/* size is dynamic (prop), so width/height stay inline */
+/* className handles rounded-full, object-cover, shrink-0 via Tailwind */

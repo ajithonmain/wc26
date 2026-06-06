@@ -1,0 +1,155 @@
+/* ─── ActionSheet overlay ────────────────────────────────────────────────── */
+
+.as-overlay {
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ─── Sheet panel ────────────────────────────────────────────────────────── */
+
+.as-panel-desktop {
+  background: var(--modal-bg);
+  border-radius: 20px;
+  padding: 24px 20px 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+.as-panel-mobile {
+  background: var(--modal-bg);
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* ─── Match header ───────────────────────────────────────────────────────── */
+
+.as-match-hd {
+  border-bottom: 1px solid var(--modal-divider);
+}
+
+.as-match-hd-title {
+  color: var(--modal-text);
+}
+
+.as-match-hd-vs {
+  color: var(--modal-sub);
+  font-weight: 400;
+  margin: 0 6px;
+}
+
+.as-match-hd-meta {
+  color: var(--modal-sub);
+}
+
+/* ─── Denied message ─────────────────────────────────────────────────────── */
+
+.as-denied {
+  color: #ff6b2b;
+}
+
+/* ─── Option row ─────────────────────────────────────────────────────────── */
+
+.as-option-row {
+  gap: 14px;
+  padding: 14px 0;
+  background: none;
+}
+
+.as-option-row--bordered {
+  border-bottom: 1px solid var(--modal-divider);
+}
+
+.as-option-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+}
+
+.as-option-label {
+  color: var(--modal-text);
+}
+
+.as-option-sub {
+  color: var(--modal-sub);
+}
+
+.as-option-on-badge {
+  background: rgba(255, 107, 43, 0.1);
+  color: #ff6b2b;
+}
+
+/* ─── Browser reminder section ───────────────────────────────────────────── */
+
+.as-reminder-wrap {
+  padding: 16px 0;
+}
+
+.as-reminder-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+}
+
+.as-reminder-icon-wrap--active {
+  background: rgba(255, 107, 43, 0.1);
+  color: #ff6b2b;
+}
+
+.as-reminder-icon-wrap--inactive {
+  background: var(--modal-btn-bg);
+  color: var(--modal-sub);
+}
+
+.as-reminder-title {
+  color: var(--modal-text);
+}
+
+.as-reminder-sub {
+  color: #f59e0b;
+}
+
+.as-reminder-remove {
+  color: #ff6b2b;
+}
+
+/* ─── Reminder chips ─────────────────────────────────────────────────────── */
+
+.as-chip {
+  background: var(--modal-btn-bg);
+  color: var(--modal-btn-text);
+}
+
+.as-chip--active {
+  background: #ff6b2b;
+  color: #fff;
+}
+
+/* ─── Actions wrapper ────────────────────────────────────────────────────── */
+
+.as-actions {
+  margin-top: 8px;
+}
+
+/* ─── Reminder row header ────────────────────────────────────────────────── */
+
+.as-reminder-hd {
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+/* ─── Reminder chip row ──────────────────────────────────────────────────── */
+
+.as-chip-row {
+  padding-left: 52px;
+}
+
+/* ─── Close button ───────────────────────────────────────────────────────── */
+
+.as-close-btn {
+  background: var(--modal-btn-bg);
+  color: var(--modal-btn-text);
+  margin-top: 16px;
+  margin-bottom: 4px;
+}

@@ -1,0 +1,105 @@
+/* ─── Match Center view ──────────────────────────────────────────────────── */
+
+.mct-title {
+  color: var(--txt);
+}
+
+.mct-date {
+  color: var(--dim);
+}
+
+/* ─── Search bar ─────────────────────────────────────────────────────────── */
+
+.mct-search {
+  gap: 9px;
+  border-radius: 13px;
+  padding: 10px 15px;
+  width: 230px;
+  color: var(--mut);
+  font-size: 13px;
+}
+
+.mct-search-placeholder {
+  color: var(--mut);
+}
+
+/* ─── Filter chip bar ────────────────────────────────────────────────────── */
+
+.mct-filter-bar {
+  border-bottom: 1px solid var(--glass-bd);
+  background: var(--glass);
+}
+
+/* ─── My Matches filter chip ─────────────────────────────────────────────── */
+
+.mct-my-chip {
+  background: var(--glass-2);
+  color: var(--mut);
+  border: 1px solid var(--glass-bd);
+  box-shadow: none;
+}
+
+.mct-my-chip--active {
+  background: var(--gold);
+  color: #000;
+  border: 1px solid var(--glass-bd);
+  box-shadow: 0 0 12px rgba(255, 194, 61, 0.3);
+}
+
+.mct-my-chip--disabled {
+  color: var(--faint);
+}
+
+.mct-filter-count {
+  color: var(--dim);
+}
+
+/* ─── Empty state ────────────────────────────────────────────────────────── */
+
+.mct-empty {
+  color: var(--dim);
+}
+
+.mct-empty-msg {
+  color: var(--mut);
+}
+
+/* ─── Day section ────────────────────────────────────────────────────────── */
+
+.mct-day-heading {
+  color: var(--nav-text);
+}
+
+/* ─── Group label ────────────────────────────────────────────────────────── */
+
+.mct-group-label {
+  color: var(--meta-text);
+}
+
+/* ─── Next Up label ──────────────────────────────────────────────────────── */
+
+.mct-next-up-label {
+  color: var(--meta-text);
+}
+
+/* ─── Scroll snap ────────────────────────────────────────────────────────── */
+
+#match-scroller {
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 0px;
+}
+
+.mct-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.mct-filter-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}

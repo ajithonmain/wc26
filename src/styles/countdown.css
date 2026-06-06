@@ -1,0 +1,30 @@
+/* ─── Countdown ──────────────────────────────────────────────────────────── */
+
+.cd-unit-box {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.cd-digit {
+  font-family: "Geist Mono", monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--txt);
+}
+
+.cd-label {
+  color: var(--dim);
+}
+
+.cd-sep {
+  color: var(--faint);
+  font-size: 1.25rem;
+  line-height: 1;
+  margin-top: 2px;
+  align-self: flex-start;
+  padding-top: 4px;
+}
+
+.cd-kicked-off {
+  color: var(--live);
+}

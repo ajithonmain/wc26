@@ -1,0 +1,46 @@
+/* ─── Live Carousel ──────────────────────────────────────────────────────── */
+
+.lc-live-dot {
+  background: var(--live);
+}
+
+.lc-header-title {
+  color: var(--txt);
+}
+
+.lc-view-all {
+  color: var(--accent);
+}
+
+/* ─── Scroll track ───────────────────────────────────────────────────────── */
+
+.lc-track {
+  scroll-snap-type: x mandatory;
+  overflow-y: visible;
+}
+
+/* ─── Slide ──────────────────────────────────────────────────────────────── */
+
+.lc-slide {
+  scroll-snap-align: start;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+/* ─── Dots ───────────────────────────────────────────────────────────────── */
+
+.lc-dot {
+  height: 6px;
+  border-radius: 9999px;
+  transition: all 0.2s;
+}
+
+.lc-dot--active {
+  width: 16px;
+  background: var(--accent);
+}
+
+.lc-dot--inactive {
+  width: 6px;
+  background: var(--faint);
+}

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+functions/node_modules
+
+# Build output
+dist
+.firebase
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*.log
+
+# OS
+.DS_Store
+
+# Editor
+.vscode
+.idea
+
+# Claude Code (personal settings)
+.claude
+
+# Scratch / prototypes
+wc26-glass.html
+
+# Claude / reference docs (not for repo)
+CLAUDE.md
+CLAUDE_CODE_PROMPTS.md
+SPEC.md
