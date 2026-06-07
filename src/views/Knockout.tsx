@@ -120,9 +120,9 @@ function BracketCard({ match }: { match: Match }): React.ReactElement {
 
 // ─── Desktop round column ─────────────────────────────────────────────────────
 
-function RoundColumn({ roundKey, roundIndex, windowStart, matches, containerH }: {
+function RoundColumn({ roundKey, roundIndex, windowStart, matches, containerH, isLast }: {
   roundKey: string; roundIndex: number; windowStart: number;
-  matches: Match[]; containerH: number;
+  matches: Match[]; containerH: number; isLast?: boolean;
 }): React.ReactElement {
   const roundMatches = useMemo(
     () => matches.filter((m) => m.round === roundKey).sort((a, b) => a.id - b.id),
@@ -130,7 +130,7 @@ function RoundColumn({ roundKey, roundIndex, windowStart, matches, containerH }:
   );
 
   return (
-    <div className="bracket-col" style={{ height: containerH }}>
+    <div className={`bracket-col${isLast ? " ko-col-last" : ""}`} style={{ height: containerH }}>
       {roundMatches.map((match, i) => (
         <div key={match.id} className="bracket-card-slot" style={{ top: cardTop(i, roundIndex, windowStart) }}>
           <BracketCard match={match} />
@@ -320,6 +320,7 @@ export default function Knockout(): React.ReactElement {
         <div className="bracket-row" style={{ height: containerH }}>
           {visibleRounds.map((r) => {
             const roundIndex = ROUNDS.findIndex((x) => x.key === r.key);
+            const isLast = roundIndex === ROUNDS.length - 1;
             return (
               <RoundColumn
                 key={r.key}
@@ -328,6 +329,7 @@ export default function Knockout(): React.ReactElement {
                 windowStart={windowStart}
                 matches={allMatches}
                 containerH={containerH}
+                isLast={isLast}
               />
             );
           })}
