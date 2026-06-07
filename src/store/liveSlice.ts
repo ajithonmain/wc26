@@ -8,6 +8,7 @@ export interface LiveScore {
   homeScore: number;
   awayScore: number;
   minute: number | null;
+  events: string;
 }
 
 interface LiveState {
@@ -25,11 +26,13 @@ export const useLiveStore = create<LiveState>()((set) => ({
         const d = doc.data();
         if (!d.home || !d.away) return;
         const key = `${d.home.toLowerCase()}|${d.away.toLowerCase()}`;
+        const parts = [d.homeScorers, d.awayScorers].filter(Boolean).join(" · ");
         map.set(key, {
           status: d.status ?? "NS",
           homeScore: d.homeScore ?? 0,
           awayScore: d.awayScore ?? 0,
           minute: d.minute ?? null,
+          events: parts,
         });
       });
       set({ scores: map });

@@ -46,8 +46,9 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
         />
       </div>
 
-      {/* Right: install + tz picker + theme toggle + bell */}
+      {/* Right: install · info · tz · theme · bell */}
       <div className="flex items-center gap-2">
+        {/* Install — one-time, leftmost */}
         {showInstall && (
           <button
             onClick={onInstallClick}
@@ -62,7 +63,20 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
           </button>
         )}
 
-        {/* Timezone selector */}
+        {/* Info */}
+        <button
+          onClick={() => setAboutOpen(true)}
+          className="app-mobile-bell glass flex items-center justify-center rounded-full"
+          aria-label="About"
+        >
+          <Icon name="info" size={18} />
+        </button>
+        <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
+
+        {/* Theme */}
+        <ThemeToggle />
+
+        {/* Timezone */}
         <button
           onClick={() => setTzOpen(true)}
           className="app-tz-btn glass flex items-center justify-center rounded-full"
@@ -72,15 +86,7 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
         </button>
         <TZPicker open={tzOpen} onClose={() => setTzOpen(false)} />
 
-        <ThemeToggle />
-        <button
-          onClick={() => setAboutOpen(true)}
-          className="app-mobile-bell glass flex items-center justify-center rounded-full"
-          aria-label="About"
-        >
-          <Icon name="info" size={18} />
-        </button>
-        <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
+        {/* Bell — most used, rightmost */}
         <button
           onClick={onBellClick}
           className="app-mobile-bell glass flex items-center justify-center rounded-full relative"

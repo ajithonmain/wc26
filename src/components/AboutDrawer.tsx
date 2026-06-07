@@ -162,7 +162,7 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                 Fixtures from the official FIFA World Cup 2026 draw. Flag images via flagcdn.com.
               </p>
               <p className="ab-copyright text-xs mt-4">
-                © 2026 vibecoderaj. All rights reserved.
+                © 2026 ajithmjose. All rights reserved.
               </p>
             </div>
           </motion.div>

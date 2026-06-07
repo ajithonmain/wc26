@@ -18,6 +18,7 @@ export function useMergedMatches(): Match[] {
         status: live.status as MatchStatus,
         score: { home: live.homeScore, away: live.awayScore },
         minute: live.minute,
+        events: live.events || undefined,
       };
     });
   }, [seed, scores]);
