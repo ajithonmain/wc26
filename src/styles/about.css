@@ -1,0 +1,109 @@
+/* ─── Header ──────────────────────────────────────────────────────────────── */
+
+.ab-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.ab-app-name {
+  font-size: 15px;
+  color: var(--txt);
+}
+
+.ab-app-sub {
+  color: var(--dim);
+}
+
+.ab-close {
+  width: 28px;
+  height: 28px;
+  background: var(--glass-2);
+  color: var(--mut);
+}
+
+/* ─── Body ────────────────────────────────────────────────────────────────── */
+
+.ab-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) transparent;
+}
+
+.ab-body::-webkit-scrollbar { width: 4px; }
+.ab-body::-webkit-scrollbar-track { background: transparent; }
+.ab-body::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 4px; }
+
+.ab-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+/* ─── Feature rows ────────────────────────────────────────────────────────── */
+
+.ab-features {
+  padding: 2px 0;
+}
+
+.ab-feature-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--glass-2);
+  color: var(--accent);
+}
+
+.ab-feature-title {
+  color: var(--txt);
+}
+
+.ab-feature-desc {
+  color: var(--mut);
+  line-height: 1.5;
+}
+
+/* ─── Browser reminder box ────────────────────────────────────────────────── */
+
+.ab-reminder-box {
+  background: var(--glass-2);
+  border: 1px solid var(--glass-bd);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.ab-reminder-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.ab-reminder-title {
+  color: var(--txt);
+}
+
+.ab-reminder-desc {
+  color: var(--mut);
+  line-height: 1.5;
+}
+
+.ab-reminder-tip {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ─── Body text / copyright ───────────────────────────────────────────────── */
+
+.ab-body-text {
+  color: var(--mut);
+  line-height: 1.6;
+}
+
+.ab-copyright {
+  color: var(--dim);
+}

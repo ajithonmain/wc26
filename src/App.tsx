@@ -18,6 +18,7 @@ import { initForegroundMessaging } from "./lib/firebase";
 import { useUIStore } from "./store/uiSlice";
 import { tzAbbr } from "./lib/timezones";
 import TZPicker from "./components/TimezonePicker";
+import AboutDrawer from "./components/AboutDrawer";
 import InstallBanner from "./components/InstallBanner";
 import StorageBanner, { useStorageNoticeShown } from "./components/StorageBanner";
 import "./styles/app.css";
@@ -32,6 +33,7 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
   );
   const { timezone } = useUIStore();
   const [tzOpen, setTzOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   return (
     <header className="app-mobile-header flex items-center justify-between px-4 shrink-0">
@@ -71,6 +73,14 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
         <TZPicker open={tzOpen} onClose={() => setTzOpen(false)} />
 
         <ThemeToggle />
+        <button
+          onClick={() => setAboutOpen(true)}
+          className="app-mobile-bell glass flex items-center justify-center rounded-full"
+          aria-label="About"
+        >
+          <Icon name="info" size={18} />
+        </button>
+        <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
         <button
           onClick={onBellClick}
           className="app-mobile-bell glass flex items-center justify-center rounded-full relative"

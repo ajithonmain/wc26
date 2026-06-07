@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useMatch } from "react-router-dom";
 import Icon from "./Icon";
 import TZPicker from "./TimezonePicker";
+import AboutDrawer from "./AboutDrawer";
 import { useUIStore } from "../store/uiSlice";
 import { useAlertsStore } from "../store/alertsSlice";
 import { TZ_OPTIONS, BROWSER_TZ, tzAbbr } from "../lib/timezones";
@@ -52,6 +53,7 @@ export default function Sidebar(): React.ReactElement {
   const liveCount = useLiveMatches(allMatches).length;
   const [tzOpen, setTzOpen] = useState(false);
   const tzBtnRef = useRef<HTMLButtonElement>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   const tzLabel = TZ_LIST.find((o) => o.tz === timezone)?.label ?? timezone;
 
@@ -107,7 +109,20 @@ export default function Sidebar(): React.ReactElement {
         <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
       </button>
 
+      {/* ── About ── */}
+      <button
+        onClick={() => setAboutOpen(true)}
+        className="sb-theme-btn flex items-center w-full transition-colors"
+        aria-label="About"
+      >
+        <span className="sb-theme-icon">
+          <Icon name="info" size={16} />
+        </span>
+        <span>About</span>
+      </button>
+
       <TZPicker open={tzOpen} onClose={() => setTzOpen(false)} anchorRef={tzBtnRef} />
+      <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </aside>
   );
 }

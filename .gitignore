@@ -30,6 +30,11 @@ ui-debug.log
 # Scratch / prototypes
 wc26-glass.html
 
+# Server-side scripts + Firebase Admin credentials — NEVER commit
+poller.js
+serviceAccount.json
+*serviceAccount*.json
+
 # Claude / reference docs (not for repo)
 CLAUDE.md
 CLAUDE_CODE_PROMPTS.md

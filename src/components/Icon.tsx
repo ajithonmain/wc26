@@ -23,7 +23,8 @@ export type IconName =
   | "sliders"
   | "x"
   | "trophy"
-  | "clock";
+  | "clock"
+  | "info";
 
 interface IconProps {
   name: IconName;
@@ -107,6 +108,8 @@ const paths: Record<IconName, string> = {
     "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 8 0 4 4 0 0 1-8 0M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75",
   clock:
     "M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
+  info:
+    "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-1 4h2v6h-2v-6z",
   // Jersey / sport shirt — for Teams tab
   shirt:
     "M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23Z",

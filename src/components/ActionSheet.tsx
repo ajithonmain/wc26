@@ -132,7 +132,7 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
                       {isAlerting ? `Browser reminder — ${alertEntry?.reminderMins === 30 ? "30 min" : alertEntry?.reminderMins === 120 ? "2 hours" : "1 hour"} before` : "Browser reminder"}
                     </span>
                     <span className="as-reminder-sub block text-xs mt-0.5">
-                      Only works if browser is open
+                      Remind me before kickoff
                     </span>
                   </span>
                   {isAlerting && (
