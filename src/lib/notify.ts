@@ -8,8 +8,28 @@ export interface AlertEntry {
 
 export async function requestPermission(): Promise<NotificationPermission> {
   if (!("Notification" in window)) return "denied";
+  if (Notification.permission === "granted") {
+    void registerFCMToken();
+    return "granted";
+  }
   if (Notification.permission !== "default") return Notification.permission;
-  return Notification.requestPermission();
+  const perm = await Notification.requestPermission();
+  if (perm === "granted") void registerFCMToken();
+  return perm;
+}
+
+async function registerFCMToken(): Promise<void> {
+  try {
+    if (!("serviceWorker" in navigator)) return;
+    const { getFCMToken } = await import("./firebase");
+    const { doc, setDoc } = await import("firebase/firestore");
+    const { db } = await import("./firebase");
+    const token = await getFCMToken();
+    if (!token) return;
+    await setDoc(doc(db, "subs", token), { token, ts: Date.now() }, { merge: true });
+  } catch {
+    // FCM unavailable — browser alerts still work
+  }
 }
 
 export function scheduleKickoffAlert(entry: AlertEntry): void {

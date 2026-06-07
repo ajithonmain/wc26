@@ -12,6 +12,7 @@ import TabBar from "./components/TabBar";
 import Icon from "./components/Icon";
 import { useAlertsStore } from "./store/alertsSlice";
 import { checkOnOpenAlerts } from "./lib/notify";
+import { initForegroundMessaging } from "./lib/firebase";
 import { getGreetingIST } from "./lib/matchUtils";
 import InstallBanner from "./components/InstallBanner";
 import "./styles/app.css";
@@ -58,6 +59,7 @@ function AlertsBootstrap(): React.ReactElement | null {
   const alerts = useAlertsStore((s) => s.alerts);
   useEffect(() => {
     checkOnOpenAlerts(alerts);
+    initForegroundMessaging();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null;
