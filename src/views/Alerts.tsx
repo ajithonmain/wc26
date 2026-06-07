@@ -185,22 +185,34 @@ export default function Alerts(): React.ReactElement {
 
   const [pending, setPending] = useState<AlertEntry | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const pendingRef = useRef<AlertEntry | null>(null);
 
   const handleRemove = useCallback((alert: AlertEntry) => {
     clearTimeout(timerRef.current);
+    pendingRef.current = alert;
     setPending(alert);
     timerRef.current = setTimeout(() => {
       remove(alert.matchId);
+      pendingRef.current = null;
       setPending(null);
     }, 4000);
   }, [remove]);
 
   const handleUndo = useCallback(() => {
     clearTimeout(timerRef.current);
+    pendingRef.current = null;
     setPending(null);
   }, []);
 
-  useEffect(() => () => clearTimeout(timerRef.current), []);
+  // Flush pending delete when component unmounts (e.g. drawer closed before timer fires)
+  useEffect(() => {
+    return () => {
+      clearTimeout(timerRef.current);
+      if (pendingRef.current) {
+        remove(pendingRef.current.matchId);
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const matchById = useMemo(() => {
     const map = new Map<number, Match>();
