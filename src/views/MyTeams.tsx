@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useTeams } from "../hooks/useTeams";
-import { useMatches } from "../hooks/useMatches";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
 import { useMatchesByDay } from "../hooks/useMatchesByDay";
 import { useFavoritesStore } from "../store/favoritesSlice";
 import type { Team } from "../types";

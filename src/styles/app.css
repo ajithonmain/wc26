@@ -35,6 +35,28 @@
   color: var(--mut);
 }
 
+.app-tz-btn {
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  color: var(--mut);
+}
+
+.app-tz-abbr {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.app-bell-badge {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  background: var(--accent);
+  color: #fff;
+  pointer-events: none;
+}
+
 /* ─── Coming soon placeholder ────────────────────────────────────────────── */
 
 .app-coming-soon {
@@ -43,4 +65,59 @@
 
 .app-coming-soon-label {
   color: var(--accent);
+}
+
+/* ─── Storage notice banner ──────────────────────────────────────────────── */
+
+.sb-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.sb-card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--modal-bg);
+  border-radius: 18px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: ib-slide-up 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.sb-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--txt);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.sb-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--meta-text);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sb-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  transition: opacity 0.15s;
+}
+
+.sb-btn:hover {
+  opacity: 0.88;
 }

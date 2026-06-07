@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Match } from "../types";
-import { istTimeParts } from "../lib/matchUtils";
+import { timeParts } from "../lib/matchUtils";
+import { useUIStore } from "../store/uiSlice";
 import { countdownTo } from "../lib/time";
 import { useAlertsStore } from "../store/alertsSlice";
 import FlagImg from "./FlagImg";
@@ -51,11 +52,12 @@ function PSTBadge(): React.ReactElement {
 // ─── row variant ─────────────────────────────────────────────────────────────
 
 function RowCard({ match }: { match: Match }): React.ReactElement {
+  const tz = useUIStore((s) => s.timezone);
   const isLive = match.status === "LIVE";
   const isHT = match.status === "HT";
   const isScored = isLive || isHT || match.status === "FT";
   const isFT = match.status === "FT";
-  const { hm, ampm } = istTimeParts(match.kickoffUTC);
+  const { hm, period, abbr } = timeParts(match.kickoffUTC, tz);
   const isAlerting = useAlertsStore((s) => s.isAlerting(match.id));
   const [showSheet, setShowSheet] = useState(false);
 
@@ -113,8 +115,8 @@ function RowCard({ match }: { match: Match }): React.ReactElement {
             </>
           ) : (
             <>
-              <span className="mc-row-time font-tabular">{hm}</span>
-              <span className="mc-row-ampm">{ampm}</span>
+              <span className="mc-row-time font-tabular">{hm} {period}</span>
+              <span className="mc-row-ampm">{abbr}</span>
             </>
           )}
 
@@ -145,10 +147,11 @@ function HeroCard({
   match: Match;
   children?: React.ReactNode;
 }): React.ReactElement {
+  const tz = useUIStore((s) => s.timezone);
   const isLive = match.status === "LIVE";
   const isHT = match.status === "HT";
   const isScored = isLive || isHT || match.status === "FT";
-  const { hm, ampm } = istTimeParts(match.kickoffUTC);
+  const { hm, ampm } = timeParts(match.kickoffUTC, tz);
 
   const hg = match.score.home ?? 0;
   const ag = match.score.away ?? 0;
@@ -291,8 +294,9 @@ function HeroCard({
 // ─── compact variant (right rail) ────────────────────────────────────────────
 
 function CompactCard({ match }: { match: Match }): React.ReactElement {
+  const tz = useUIStore((s) => s.timezone);
   const isScored = match.status === "LIVE" || match.status === "HT" || match.status === "FT";
-  const { hm } = istTimeParts(match.kickoffUTC);
+  const { hm } = timeParts(match.kickoffUTC, tz);
   const hg = match.score.home ?? 0;
   const ag = match.score.away ?? 0;
   const homeWins = isScored && hg > ag;
@@ -360,7 +364,8 @@ export { HeroCard };
 // ─── Next Up hero card — horizontal single-row layout ─────────────────────────
 
 export function HeroCardWithCountdown({ match }: { match: Match }): React.ReactElement {
-  const { hm, ampm } = istTimeParts(match.kickoffUTC);
+  const tz = useUIStore((s) => s.timezone);
+  const { hm, ampm } = timeParts(match.kickoffUTC, tz);
   const [cd, setCd] = useState(() => countdownTo(match.kickoffUTC));
 
   useEffect(() => {

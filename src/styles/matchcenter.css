@@ -82,17 +82,6 @@
   color: var(--meta-text);
 }
 
-/* ─── Scroll snap ────────────────────────────────────────────────────────── */
-
-#match-scroller {
-  scroll-snap-type: y mandatory;
-  scroll-padding-top: 0px;
-}
-
-.mct-snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
 
 .mct-filter-dot {
   position: absolute;

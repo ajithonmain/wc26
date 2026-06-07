@@ -1,0 +1,159 @@
+/* ─── Backdrop ───────────────────────────────────────────────────────────── */
+
+.tzp-backdrop {
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ─── Mobile sheet ───────────────────────────────────────────────────────── */
+
+.tzp-sheet {
+  z-index: 401;
+  max-height: 72vh;
+  border-radius: 20px 20px 0 0;
+  background: var(--modal-bg);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ─── Handle ─────────────────────────────────────────────────────────────── */
+
+.tzp-handle {
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: var(--faint);
+  border-radius: 2px;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.tzp-hd {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--modal-divider, var(--glass-bd));
+  flex-shrink: 0;
+}
+
+.tzp-hd-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.tzp-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--modal-btn-bg, var(--glass-2));
+  color: var(--mut);
+  transition: background 0.15s;
+}
+
+.tzp-close:hover {
+  background: var(--glass-2);
+}
+
+/* ─── List ───────────────────────────────────────────────────────────────── */
+
+.tzp-list {
+  padding: 6px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--faint) transparent;
+}
+
+.tzp-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tzp-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tzp-list::-webkit-scrollbar-thumb {
+  background: var(--faint);
+  border-radius: 4px;
+}
+
+.tzp-list::-webkit-scrollbar-thumb:hover {
+  background: var(--mut);
+}
+
+.tzp-list-pad {
+  height: max(env(safe-area-inset-bottom), 12px);
+}
+
+/* ─── Option row ─────────────────────────────────────────────────────────── */
+
+.tzp-option {
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 11px;
+  transition: background 0.1s;
+  background: transparent;
+}
+
+.tzp-option:active {
+  background: var(--glass-2);
+}
+
+.tzp-option--active {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.tzp-option-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--txt);
+}
+
+.tzp-option-abbr {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mut);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.tzp-option--active .tzp-option-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tzp-option--active .tzp-option-abbr {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+.tzp-option-check {
+  color: var(--accent);
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* ─── Desktop dropdown ───────────────────────────────────────────────────── */
+
+.tzp-dd-backdrop {
+  z-index: 400;
+}
+
+.tzp-dropdown {
+  z-index: 401;
+  width: 240px;
+  max-height: min(480px, calc(100vh - 48px));
+  background: var(--modal-bg, var(--glass-2));
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--glass-bd);
+  border-radius: 16px;
+  box-shadow: var(--shadow), inset 0 1px 0 var(--glass-hi);
+  overflow: hidden;
+}
+
+.tzp-dd-hd {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--modal-divider, var(--glass-bd));
+  flex-shrink: 0;
+}

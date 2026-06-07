@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import type { DayGroup } from "../hooks/useMatchesByDay";
+import { useUIStore } from "../store/uiSlice";
 import Icon from "./Icon";
 import "../styles/daterail.css";
 
@@ -9,10 +10,17 @@ interface DateRailProps {
   onSelect: (dayKey: string) => void;
 }
 
-function pillParts(dayKey: string): { month: string; weekday: string; day: string } {
-  const d = new Date(`${dayKey}T06:30:00Z`);
+function pillParts(dayKey: string, tz: string): { month: string; weekday: string; day: string } {
+  // dayKey is YYYY-MM-DD in the selected tz. Use noon UTC as a reference point,
+  // then shift by 24h if it lands on the wrong calendar day (handles UTC+12 edge case).
+  const base = new Date(`${dayKey}T12:00:00Z`);
+  const check = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(base);
+  const d = check === dayKey ? base : new Date(base.getTime() + (check > dayKey ? -1 : 1) * 86_400_000);
+
   const fmt = (opts: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", ...opts })
+    new Intl.DateTimeFormat("en-IN", { timeZone: tz, ...opts })
       .format(d)
       .toUpperCase()
       .replace(/\./g, "");
@@ -28,6 +36,7 @@ export default function DateRail({
   activeDay,
   onSelect,
 }: DateRailProps): React.ReactElement {
+  const tz = useUIStore((s) => s.timezone);
   const activePillRef = useRef<HTMLButtonElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -117,11 +126,11 @@ export default function DateRail({
   }, []);
 
   useEffect(() => {
-    activePillRef.current?.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
+    const pill = activePillRef.current;
+    const rail = railRef.current;
+    if (!pill || !rail) return;
+    const target = pill.offsetLeft - (rail.offsetWidth - pill.offsetWidth) / 2;
+    rail.scrollTo({ left: target, behavior: "smooth" });
   }, [activeDay]);
 
   const scroll = (dir: "left" | "right") => {
@@ -147,7 +156,7 @@ export default function DateRail({
       >
         {days.map(({ dayKey, label }) => {
           const isActive = dayKey === activeDay;
-          const { month, weekday, day } = pillParts(dayKey);
+          const { month, weekday, day } = pillParts(dayKey, tz);
           return (
             <button
               key={dayKey}

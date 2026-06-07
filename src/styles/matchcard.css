@@ -22,7 +22,7 @@
 
 .mc-row-inner {
   display: grid;
-  grid-template-columns: 1fr 80px;
+  grid-template-columns: 1fr 100px;
   align-items: stretch;
 }
 
@@ -55,7 +55,8 @@
 
 .mc-row-right {
   padding: 14px 12px;
-  width: 80px;
+  width: 100px;
+  flex-shrink: 0;
 }
 
 .mc-row-time {
@@ -63,6 +64,7 @@
   font-size: 18px;
   font-weight: 700;
   color: var(--txt);
+  white-space: nowrap;
 }
 
 .mc-row-ampm {

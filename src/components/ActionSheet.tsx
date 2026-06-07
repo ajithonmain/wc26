@@ -4,10 +4,12 @@ import type { Match } from "../types";
 import { useAlertsStore } from "../store/alertsSlice";
 import { requestPermission, scheduleKickoffAlert } from "../lib/notify";
 import { googleCalendarUrl } from "../lib/calendar";
-import { istTimeParts } from "../lib/matchUtils";
+import { timeParts } from "../lib/matchUtils";
+import { useUIStore } from "../store/uiSlice";
 import FlagImg from "./FlagImg";
 import Icon from "./Icon";
 import "../styles/actionsheet.css";
+
 
 interface ActionSheetProps {
   match: Match;
@@ -51,7 +53,8 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
   const remove        = useAlertsStore((s) => s.remove);
   const [denied, setDenied] = useState(false);
 
-  const { hm, ampm } = istTimeParts(match.kickoffUTC);
+  const tz = useUIStore((s) => s.timezone);
+  const { hm, ampm } = timeParts(match.kickoffUTC, tz);
   const label    = match.group ? `Group ${match.group}` : match.round;
   const isFuture = match.status === "NS" && new Date(match.kickoffUTC).getTime() > Date.now() + 60_000;
 

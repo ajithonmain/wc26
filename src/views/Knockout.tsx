@@ -1,6 +1,7 @@
-import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback } from "react";
-import { useMatches } from "../hooks/useMatches";
-import { istTimeParts } from "../lib/matchUtils";
+import { useState, useMemo, useRef, useEffect, useLayoutEffect } from "react";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
+import { timeParts } from "../lib/matchUtils";
+import { useUIStore } from "../store/uiSlice";
 import FlagImg from "../components/FlagImg";
 import Icon from "../components/Icon";
 import type { Match } from "../types";
@@ -37,25 +38,9 @@ const ROUNDS = [
 const COL_LABEL_H = 44; // px reserved for round label + top breathing room
 
 const DESKTOP_COLS = 3;
-const MOBILE_COL_VW = 62; // % of viewport width each column occupies
 
 // ─── Dummy FT data ────────────────────────────────────────────────────────────
 
-const DUMMY_KO: Partial<Match>[] = [
-  { id: 9073, status: "FT", placeholder: false, score: { home: 2, away: 1 },
-    home: { name: "Mexico", slot: "Mexico", iso: "mx" },
-    away: { name: "South Africa", slot: "South Africa", iso: "za" } },
-  { id: 9074, status: "FT", placeholder: false, score: { home: 1, away: 3 },
-    home: { name: "South Korea", slot: "South Korea", iso: "kr" },
-    away: { name: "France", slot: "France", iso: "fr" } },
-  { id: 9075, status: "FT", placeholder: false, score: { home: 0, away: 2 },
-    home: { name: "USA", slot: "USA", iso: "us" },
-    away: { name: "Brazil", slot: "Brazil", iso: "br" } },
-  { id: 9076, status: "FT", placeholder: false, score: { home: 1, away: 1 },
-    penaltyScore: { home: 3, away: 5 },
-    home: { name: "Germany", slot: "Germany", iso: "de" },
-    away: { name: "Argentina", slot: "Argentina", iso: "ar" } },
-];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -78,9 +63,10 @@ function BracketCard({ match }: { match: Match }): React.ReactElement {
   const homeWins = isFT && (isPen ? (hp !== null && ap !== null && hp > ap) : (hg !== null && ag !== null && hg > ag));
   const awayWins = isFT && (isPen ? (hp !== null && ap !== null && ap > hp) : (hg !== null && ag !== null && ag > hg));
 
-  const { hm, ampm } = istTimeParts(match.kickoffUTC);
+  const tz = useUIStore((s) => s.timezone);
+  const { hm, ampm } = timeParts(match.kickoffUTC, tz);
   const dateStr = new Intl.DateTimeFormat("en-IN", {
-    timeZone: "Asia/Kolkata", day: "numeric", month: "short",
+    timeZone: tz, day: "numeric", month: "short",
   }).format(new Date(match.kickoffUTC));
 
   const badge = isLive
@@ -159,10 +145,7 @@ function RoundColumn({ roundKey, roundIndex, windowStart, matches, containerH }:
 export default function Knockout(): React.ReactElement {
   const rawMatches = useMatches();
 
-  const allMatches = useMemo(() => {
-    const overrides = new Map(DUMMY_KO.map((d) => [d.id!, d]));
-    return rawMatches.map((m) => overrides.has(m.id) ? { ...m, ...overrides.get(m.id) } : m);
-  }, [rawMatches]);
+  const allMatches = rawMatches;
 
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [scrollKey, setScrollKey] = useState(0); // increments on every tab tap, even same round
@@ -323,7 +306,7 @@ export default function Knockout(): React.ReactElement {
 
         {/* Third-place Play-off on mobile — shows when Final (last round) is selected */}
         {thirdPlace && selectedIdx === ROUNDS.length - 1 && (
-          <div className="ko-mobile-col bracket-col w-[66vw] shrink-0">
+          <div className="ko-mobile-col bracket-col ko-col-last w-[66vw] shrink-0">
             <span className="ko-col-label">Third-place Play-off</span>
             <div className="bracket-card-slot" style={{ top: COL_LABEL_H + 12 }}>
               <BracketCard match={thirdPlace} />

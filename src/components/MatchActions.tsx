@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useAlertsStore } from "../store/alertsSlice";
-import { requestPermission, scheduleKickoffAlert } from "../lib/notify";
+import { requestPermission, scheduleKickoffAlert, syncAlertsToFirestore } from "../lib/notify";
 import Icon from "./Icon";
 import type { Match } from "../types";
 
@@ -18,11 +18,14 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
   const isFuture = match.status === "NS" && kickoffMs > Date.now() + 60_000;
   if (!isFuture) return null;
 
+  const alerts = useAlertsStore((s) => s.alerts);
+
   const handleToggle = useCallback(
     async (e: React.MouseEvent) => {
       e.stopPropagation();
       if (isAlerting) {
         remove(match.id);
+        void syncAlertsToFirestore(alerts.filter((a) => a.matchId !== match.id));
         return;
       }
       const perm = await requestPermission();
@@ -36,8 +39,9 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
       };
       add(entry);
       scheduleKickoffAlert(entry);
+      void syncAlertsToFirestore([...alerts, entry]);
     },
-    [isAlerting, match, add, remove]
+    [isAlerting, match, add, remove, alerts]
   );
 
   return (

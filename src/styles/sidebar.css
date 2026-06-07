@@ -112,5 +112,44 @@
   place-items: center;
 }
 
+/* ─── Timezone button ────────────────────────────────────────────────────── */
+
+.sb-tz-btn {
+  gap: 13px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nav-icon);
+  background: transparent;
+  margin-bottom: 2px;
+}
+
+.sb-tz-btn:hover {
+  background: var(--glass-2);
+  color: var(--txt);
+}
+
+.sb-tz-icon {
+  color: var(--nav-icon);
+  width: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.sb-tz-label {
+  color: inherit;
+}
+
+.sb-tz-abbr-pill {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: var(--glass-2);
+  color: var(--accent);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
 /* ─── Footer / Guest ─────────────────────────────────────────────────────── */
 

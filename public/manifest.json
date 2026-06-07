@@ -3,6 +3,7 @@
   "short_name": "WC26",
   "description": "Follow every match of the 2026 FIFA World Cup live.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0e1620",
   "theme_color": "#FF6A2B",

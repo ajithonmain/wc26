@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { useAlertsStore } from "../store/alertsSlice";
-import { useMatches } from "../hooks/useMatches";
-import { scheduleKickoffAlert } from "../lib/notify";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
+import { scheduleKickoffAlert, syncAlertsToFirestore } from "../lib/notify";
 import { googleCalendarUrl } from "../lib/calendar";
-import { istTimeParts } from "../lib/matchUtils";
-import { istDayKey } from "../lib/time";
+import { timeParts } from "../lib/matchUtils";
+import { dayKey, dayLabel as tzDayLabel } from "../lib/time";
+import { useUIStore } from "../store/uiSlice";
 import FlagImg from "../components/FlagImg";
 import Icon from "../components/Icon";
 import type { Match } from "../types";
@@ -12,11 +13,11 @@ import type { AlertEntry } from "../lib/notify";
 import "../styles/alerts.css";
 
 type Tab = "upcoming" | "past";
-const REMINDER_OPTIONS = [30, 60, 120] as const;
+const REMINDER_OPTIONS = [15, 30, 60] as const;
 type ReminderMins = typeof REMINDER_OPTIONS[number];
 
 function timeLabel(mins: number): string {
-  return mins === 30 ? "30 min" : mins === 120 ? "2 hrs" : "1 hr";
+  return mins === 15 ? "15 min" : mins === 30 ? "30 min" : "1 hr";
 }
 
 function firesIn(kickoffUTC: string, reminderMins: number): string {
@@ -29,16 +30,6 @@ function firesIn(kickoffUTC: string, reminderMins: number): string {
   return `${m}m`;
 }
 
-function dayLabel(kickoffUTC: string): string {
-  const key = istDayKey(kickoffUTC);
-  const d = new Date(`${key}T06:30:00Z`);
-  return new Intl.DateTimeFormat("en-IN", {
-    timeZone: "Asia/Kolkata",
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(d);
-}
 
 function CalendarButton({ match }: { match: Match }): React.ReactElement {
   return (
@@ -63,13 +54,16 @@ interface AlertCardProps {
 
 function AlertCard({ alert, match, past, onRemove }: AlertCardProps): React.ReactElement {
   const update = useAlertsStore((s) => s.update);
+  const alerts = useAlertsStore((s) => s.alerts);
 
-  const { hm, ampm } = match ? istTimeParts(match.kickoffUTC) : { hm: "--:--", ampm: "" };
+  const tz = useUIStore((s) => s.timezone);
+  const { hm, ampm } = match ? timeParts(match.kickoffUTC, tz) : { hm: "--:--", ampm: "" };
   const label = match?.group ? `Group ${match.group}` : match?.round ?? "";
 
   const handleTime = (mins: ReminderMins) => {
     update(alert.matchId, mins);
     if (match) scheduleKickoffAlert({ ...alert, reminderMins: mins });
+    void syncAlertsToFirestore(alerts.map((a) => a.matchId === alert.matchId ? { ...a, reminderMins: mins } : a));
   };
 
   return (
@@ -185,6 +179,7 @@ export default function Alerts(): React.ReactElement {
   const clearAll   = useAlertsStore((s) => s.clearAll);
   const remove     = useAlertsStore((s) => s.remove);
   const allMatches = useMatches();
+  const tz = useUIStore((s) => s.timezone);
   const [tab, setTab] = useState<Tab>("upcoming");
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -207,32 +202,9 @@ export default function Alerts(): React.ReactElement {
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
-  const DUMMY_PAST: AlertEntry = {
-    matchId: -1,
-    kickoffUTC: "2026-06-01T15:30:00Z",
-    homeTeam: "Brazil",
-    awayTeam: "Argentina",
-    reminderMins: 60,
-  };
-
-  const DUMMY_MATCH: Match = {
-    id: -1,
-    kickoffUTC: "2026-06-01T15:30:00Z",
-    venue: "SoFi Stadium",
-    city: "Los Angeles",
-    round: "Group Stage - Matchday",
-    group: "C",
-    status: "FT",
-    home: { name: "Brazil", slot: "Brazil", iso: "br" },
-    away: { name: "Argentina", slot: "Argentina", iso: "ar" },
-    score: { home: 2, away: 1 },
-    placeholder: false,
-  };
-
   const matchById = useMemo(() => {
     const map = new Map<number, Match>();
     allMatches.forEach((m) => map.set(m.id, m));
-    map.set(-1, DUMMY_MATCH);
     return map;
   }, [allMatches]);
 
@@ -245,9 +217,9 @@ export default function Alerts(): React.ReactElement {
     [alerts, pending]
   );
   const past = useMemo(() =>
-    [DUMMY_PAST, ...alerts
+    alerts
       .filter((a) => a.matchId !== pending?.matchId && new Date(a.kickoffUTC).getTime() - a.reminderMins * 60_000 <= now)
-      .sort((a, b) => new Date(b.kickoffUTC).getTime() - new Date(a.kickoffUTC).getTime())],
+      .sort((a, b) => new Date(b.kickoffUTC).getTime() - new Date(a.kickoffUTC).getTime()),
     [alerts, pending]
   );
 
@@ -256,15 +228,15 @@ export default function Alerts(): React.ReactElement {
   const byDay = useMemo(() => {
     const map = new Map<string, AlertEntry[]>();
     shown.forEach((a) => {
-      const key = istDayKey(a.kickoffUTC);
+      const key = dayKey(a.kickoffUTC, tz);
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(a);
     });
     return Array.from(map.entries()).map(([, items]) => ({
-      label: dayLabel(items[0].kickoffUTC),
+      label: tzDayLabel(items[0].kickoffUTC, tz),
       items,
     }));
-  }, [shown]);
+  }, [shown, tz]);
 
   const handleClear = () => {
     tab === "past" ? clearPast() : clearAll();
@@ -316,15 +288,6 @@ export default function Alerts(): React.ReactElement {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto hide-scrollbar px-6 pb-6">
-        {/* Browser warning */}
-        {tab === "upcoming" && upcoming.length > 0 && (
-          <div className="alerts-warning flex items-center gap-2 rounded-[10px] mb-4">
-            <span className="alerts-warning-icon"><Icon name="bell" size={12} /></span>
-            <p className="alerts-warning-text text-xs font-medium">
-              Only fires when browser is open — use <strong>Calendar</strong> for guaranteed delivery.
-            </p>
-          </div>
-        )}
 
         {shown.length === 0 ? (
           <div className="alerts-empty flex flex-col items-center gap-3 pt-16">

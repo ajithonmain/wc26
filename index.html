@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -21,6 +21,16 @@
 
     <!-- SEO -->
     <meta name="description" content="Follow every match of the 2026 FIFA World Cup live — scores, groups, knockout bracket and alerts." />
+
+    <!-- Capture PWA install prompt before React mounts — avoids race condition -->
+    <script>
+      window.__pwaPrompt = null;
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        window.__pwaPrompt = e;
+        window.dispatchEvent(new CustomEvent('pwa-prompt-ready'));
+      });
+    </script>
 
     <!-- Theme init — runs before paint to avoid flash -->
     <script>

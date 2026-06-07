@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useMatches } from "../hooks/useMatches";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
 import { useGroupStandings } from "../hooks/useGroupStandings";
 import FlagImg from "../components/FlagImg";
 import MatchCard from "../components/MatchCard";
@@ -127,42 +127,12 @@ function GroupMatches({ group, matches }: { group: string; matches: Match[] }): 
 
 // ─── Main view ────────────────────────────────────────────────────────────────
 
-const DUMMY_FT: Match[] = [
-  {
-    id: -10, kickoffUTC: "2026-06-11T19:00:00Z", venue: "SoFi Stadium", city: "Los Angeles",
-    round: "Group Stage - Matchday", group: "A", status: "FT", placeholder: false,
-    home: { name: "Mexico", slot: "Mexico", iso: "mx" },
-    away: { name: "South Africa", slot: "South Africa", iso: "za" },
-    score: { home: 2, away: 1 },
-  },
-  {
-    id: -11, kickoffUTC: "2026-06-12T02:00:00Z", venue: "AT&T Stadium", city: "Dallas",
-    round: "Group Stage - Matchday", group: "A", status: "FT", placeholder: false,
-    home: { name: "South Korea", slot: "South Korea", iso: "kr" },
-    away: { name: "Czechia", slot: "Czechia", iso: "cz" },
-    score: { home: 1, away: 1 },
-  },
-  {
-    id: -12, kickoffUTC: "2026-06-18T16:00:00Z", venue: "Mercedes-Benz Stadium", city: "Atlanta",
-    round: "Group Stage - Matchday", group: "A", status: "FT", placeholder: false,
-    home: { name: "South Africa", slot: "South Africa", iso: "za" },
-    away: { name: "South Korea", slot: "South Korea", iso: "kr" },
-    score: { home: 0, away: 2 },
-  },
-];
 
 export default function Groups(): React.ReactElement {
   const [selected, setSelected] = useState<string>("A");
   const rawMatches = useMatches();
 
-  const allMatches = useMemo(() => {
-    const overrideIds = new Set(DUMMY_FT.map((m) => m.id));
-    const realIds = new Set(rawMatches.map((m) => m.id));
-    return [
-      ...rawMatches.filter((m) => !overrideIds.has(m.id)),
-      ...DUMMY_FT.filter((m) => !realIds.has(m.id)),
-    ].sort((a, b) => new Date(a.kickoffUTC).getTime() - new Date(b.kickoffUTC).getTime());
-  }, [rawMatches]);
+  const allMatches = rawMatches;
 
   return (
     <div className="flex flex-col h-full">
@@ -170,7 +140,7 @@ export default function Groups(): React.ReactElement {
       <div className="shrink-0 px-4 pt-5 pb-4 lg:px-6 lg:pt-6">
         <h1 className="groups-title text-2xl font-bold">Groups</h1>
         <p className="groups-subtitle text-xs mt-0.5">
-          12 groups · 48 teams · Group stage
+          Groups A–L · 48 teams · Swipe to navigate
         </p>
       </div>
 

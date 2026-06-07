@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useMatches } from "../hooks/useMatches";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
 import { useNextMatch } from "../hooks/useNextMatch";
 import { useGroupStandings } from "../hooks/useGroupStandings";
 import { useLiveMatches } from "../hooks/useLiveMatches";
-import { istTimeParts } from "../lib/matchUtils";
+import { timeParts } from "../lib/matchUtils";
+import { useUIStore } from "../store/uiSlice";
 import { countdownTo } from "../lib/time";
 import FlagImg from "./FlagImg";
 import type { Match } from "../types";
@@ -160,7 +161,8 @@ function NextUpCard(): React.ReactElement {
     return <p className="rr-no-upcoming">No upcoming matches</p>;
   }
 
-  const { hm, ampm } = istTimeParts(next.kickoffUTC);
+  const tz = useUIStore((s) => s.timezone);
+  const { hm, ampm } = timeParts(next.kickoffUTC, tz);
 
   const TeamSlot = ({ iso, name }: { iso: string | null | undefined; name: string }): React.ReactElement => (
     <div className="rr-nextup-team">
@@ -195,12 +197,59 @@ function NextUpCard(): React.ReactElement {
   );
 }
 
+// ─── Upcoming list ───────────────────────────────────────────────────────────
+
+function UpcomingList({ skipId }: { skipId: number }): React.ReactElement | null {
+  const matches = useMatches();
+  const tz = useUIStore((s) => s.timezone);
+
+  const upcoming = matches
+    .filter((m) => m.status === "NS" && m.id !== skipId && new Date(m.kickoffUTC).getTime() > Date.now())
+    .sort((a, b) => new Date(a.kickoffUTC).getTime() - new Date(b.kickoffUTC).getTime())
+    .slice(0, 6);
+
+  if (upcoming.length === 0) return null;
+
+  return (
+    <div className="rr-section">
+      <div className="rr-section-hd">
+        <h4 className="rr-section-title">Upcoming</h4>
+      </div>
+      <div className="rr-upcoming-list">
+        {upcoming.map((m) => {
+          const { hm, period } = timeParts(m.kickoffUTC, tz);
+          const label = m.group ? `Grp ${m.group}` : m.round.replace("Quarter-final", "QF").replace("Semi-final", "SF");
+          return (
+            <div key={m.id} className="rr-upcoming-row">
+              <div className="rr-upcoming-teams flex-1 min-w-0">
+                <div className="rr-upcoming-team">
+                  <FlagImg iso={m.home.iso} name={m.home.name} size={14} />
+                  <span className="rr-upcoming-name truncate">{m.home.name}</span>
+                </div>
+                <div className="rr-upcoming-team">
+                  <FlagImg iso={m.away.iso} name={m.away.name} size={14} />
+                  <span className="rr-upcoming-name truncate">{m.away.name}</span>
+                </div>
+              </div>
+              <div className="rr-upcoming-time shrink-0 text-right">
+                <span className="rr-upcoming-hm">{hm} {period}</span>
+                <span className="rr-upcoming-label">{label}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ─── Right Rail ───────────────────────────────────────────────────────────────
 
 export default function RightRail(): React.ReactElement {
   const [selectedGroup, setSelectedGroup] = useState<string>("A");
   const allMatches = useMatches();
   const liveMatches = useLiveMatches(allMatches);
+  const nextMatch = useNextMatch(allMatches);
 
   const cycleGroup = (): void => {
     const idx = GROUPS.indexOf(selectedGroup as typeof GROUPS[number]);
@@ -249,6 +298,14 @@ export default function RightRail(): React.ReactElement {
         <h4 className="rr-section-title rr-next-up-title">Next Up</h4>
         <NextUpCard />
       </div>
+
+      {/* ── Upcoming ── */}
+      {nextMatch && (
+        <>
+          <div className="rr-divider" />
+          <UpcomingList skipId={nextMatch.id} />
+        </>
+      )}
     </aside>
   );
 }

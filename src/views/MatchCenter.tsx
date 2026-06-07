@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useMatches } from "../hooks/useMatches";
+import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
 import { useMatchesByDay } from "../hooks/useMatchesByDay";
 import { useLiveMatches } from "../hooks/useLiveMatches";
 import { useNextMatch } from "../hooks/useNextMatch";
 import { useFavoritesStore } from "../store/favoritesSlice";
-import { istDayKey } from "../lib/time";
-import { istHeaderDate } from "../lib/matchUtils";
+import { dayKey } from "../lib/time";
+import { headerDate } from "../lib/matchUtils";
+import { useUIStore } from "../store/uiSlice";
 import type { Match } from "../types";
 import DateRail from "../components/DateRail";
-import MatchCard, { HeroCardWithCountdown } from "../components/MatchCard";
+import MatchCard from "../components/MatchCard";
 import LiveCarousel from "../components/LiveCarousel";
 import Icon from "../components/Icon";
 import FilterSheet, { type FilterState, DEFAULT_FILTER, isFiltered } from "../components/FilterSheet";
@@ -68,26 +69,11 @@ export default function MatchCenter(): React.ReactElement {
   }, [allMatches, activeFilter, favorites]);
 
   const days = useMatchesByDay(matches);
-  const DUMMY_LIVE: Match = {
-    id: -2,
-    kickoffUTC: new Date(Date.now() - 45 * 60_000).toISOString(),
-    venue: "MetLife Stadium",
-    city: "New York",
-    round: "Group Stage - Matchday",
-    group: "B",
-    status: "LIVE",
-    minute: 67,
-    home: { name: "France", slot: "France", iso: "fr", fifaRank: 2 },
-    away: { name: "Germany", slot: "Germany", iso: "de", fifaRank: 16 },
-    score: { home: 2, away: 1 },
-    placeholder: false,
-    events: "Mbappé 23' · Giroud 58'",
-  };
-
-  const liveMatches = [DUMMY_LIVE, ...useLiveMatches(allMatches)];
+  const liveMatches = useLiveMatches(allMatches);
   const nextMatch = useNextMatch(allMatches);
 
-  const todayKey = istDayKey(new Date().toISOString());
+  const tz = useUIStore((s) => s.timezone);
+  const todayKey = dayKey(new Date().toISOString(), tz);
   const sectionRefs = useRef<Map<string, HTMLElement>>(new Map());
   const pillScrollLock = useRef(false);
   const pillScrollTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -110,11 +96,6 @@ export default function MatchCenter(): React.ReactElement {
 
   useEffect(() => {
     const scroller = document.getElementById("match-scroller");
-    if (scroller) scroller.scrollTop = 0;
-  }, []);
-
-  useEffect(() => {
-    const scroller = document.getElementById("match-scroller");
     if (!scroller) return;
 
     let rafId = 0;
@@ -128,7 +109,7 @@ export default function MatchCenter(): React.ReactElement {
         sectionRefs.current.forEach((el, key) => {
           if (el.getBoundingClientRect().top <= threshold) hit = key;
         });
-        if (hit) setActiveDay(hit);
+        setActiveDay(hit);
       });
     };
 
@@ -174,7 +155,7 @@ export default function MatchCenter(): React.ReactElement {
           <div>
             <h1 className="mct-title text-2xl font-bold">Match Center</h1>
             <p className="mct-date text-[11px] font-medium mt-1 uppercase tracking-wide">
-              {istHeaderDate()}
+              {headerDate(tz)}
             </p>
           </div>
           {/* Filter button */}
@@ -195,16 +176,10 @@ export default function MatchCenter(): React.ReactElement {
       {/* Scrollable area */}
       <div
         id="match-scroller"
-        className="flex-1 overflow-y-auto hide-scrollbar"
+        className="flex-1 overflow-y-auto hide-scrollbar overscroll-contain"
       >
         <LiveCarousel liveMatches={liveMatches} nextMatch={nextMatch} />
 
-        {nextMatch && (
-          <div className="px-4 pt-1 pb-4">
-            <p className="mct-next-up-label text-xs font-semibold mb-2">Next Up</p>
-            <HeroCardWithCountdown match={nextMatch} />
-          </div>
-        )}
 
         {/* Empty state */}
         {hasFilter && days.length === 0 && (
@@ -239,10 +214,11 @@ export default function MatchCenter(): React.ReactElement {
                     {groupLabel}
                   </p>
                   <motion.div
+                    key={`${dayKey}-${groupLabel}-${tz}`}
                     className="grid grid-cols-1 lg:grid-cols-2 gap-2"
                     initial="hidden"
                     whileInView="show"
-                    viewport={{ once: true, amount: 0.05 }}
+                    viewport={{ once: true, amount: 0 }}
                     variants={{ hidden: {}, show: { transition: { staggerChildren: 0.04 } } }}
                   >
                     {groupMatches.map((m) => (

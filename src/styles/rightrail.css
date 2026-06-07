@@ -309,3 +309,57 @@
 .rr-next-up-title {
   margin-bottom: 13px;
 }
+
+/* ─── Upcoming list ──────────────────────────────────────────────────────── */
+
+.rr-upcoming-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rr-upcoming-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--glass-bd);
+}
+
+.rr-upcoming-row:last-child {
+  border-bottom: none;
+}
+
+.rr-upcoming-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rr-upcoming-team {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.rr-upcoming-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--txt);
+}
+
+.rr-upcoming-hm {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--txt);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rr-upcoming-label {
+  display: block;
+  font-size: 10px;
+  color: var(--dim);
+  margin-top: 2px;
+}

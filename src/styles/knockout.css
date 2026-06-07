@@ -122,6 +122,7 @@
 .ko-mobile-scroll {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 .ko-mobile-col {

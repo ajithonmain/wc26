@@ -1,4 +1,6 @@
-// isLateNightIST: kickoff hour [0,5] in Asia/Kolkata — moon tag
+import { tzAbbr } from "./timezones";
+
+// isLateNightIST: kickoff hour [0,5] in Asia/Kolkata — moon tag (IST-specific aesthetic)
 export const isLateNightIST = (iso: string): boolean =>
   parseInt(
     new Intl.DateTimeFormat("en-GB", {
@@ -9,34 +11,34 @@ export const isLateNightIST = (iso: string): boolean =>
     10
   ) < 6;
 
-const _timeFmt = new Intl.DateTimeFormat("en-IN", {
-  timeZone: "Asia/Kolkata",
-  hour: "numeric",
-  minute: "2-digit",
-  hour12: true,
-});
-
-// Split IST time into clock digits and AM/PM for the stacked time display
-export const istTimeParts = (iso: string): { hm: string; ampm: string } => {
-  const raw = _timeFmt.format(new Date(iso)); // "07:30 am" or "12:30 pm"
+// Split kickoff time into clock digits and AM/PM+abbr for the stacked time display
+export const timeParts = (iso: string, tz: string): { hm: string; period: string; abbr: string; ampm: string } => {
+  const raw = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(new Date(iso));
   const isPM = /pm/i.test(raw);
   const hm = raw.replace(/\s*(am|pm)\s*/gi, "").trim();
-  return { hm, ampm: isPM ? "PM IST" : "AM IST" };
+  const abbr = tzAbbr(tz);
+  const period = isPM ? "PM" : "AM";
+  return { hm, period, abbr, ampm: `${period} ${abbr}` };
 };
 
-const _headerDateFmt = new Intl.DateTimeFormat("en-IN", {
-  timeZone: "Asia/Kolkata",
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
+// "FRIDAY, 12 JUNE 2026 · ALL TIMES IST" (tz-aware)
+export const headerDate = (tz: string): string => {
+  const abbr = tzAbbr(tz);
+  return new Intl.DateTimeFormat("en-IN", {
+    timeZone: tz,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date()).toUpperCase() + ` · ALL TIMES ${abbr}`;
+};
 
-// "FRIDAY, 12 JUNE 2026 · ALL TIMES IST"
-export const istHeaderDate = (): string =>
-  _headerDateFmt.format(new Date()).toUpperCase() + " · ALL TIMES IST";
-
-// Time-of-day greeting in IST
+// Time-of-day greeting in IST (local to Indian audience — intentionally not tz-aware)
 export const getGreetingIST = (): string => {
   const h = parseInt(
     new Intl.DateTimeFormat("en-IN", {

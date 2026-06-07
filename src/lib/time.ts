@@ -1,29 +1,19 @@
-// All kickoffs stored as ISO UTC. Render in IST via Intl — never hardcode +5:30/+9:30.
-const IST = "Asia/Kolkata";
+// All kickoffs stored as ISO UTC. Render via Intl with the caller-supplied tz.
 
-const dateFmt = new Intl.DateTimeFormat("en-IN", {
-  timeZone: IST, weekday: "short", day: "2-digit", month: "short",
-});
-const timeFmt = new Intl.DateTimeFormat("en-IN", {
-  timeZone: IST, hour: "2-digit", minute: "2-digit", hour12: true,
-});
-const dayKeyFmt = new Intl.DateTimeFormat("en-CA", {
-  timeZone: IST, year: "numeric", month: "2-digit", day: "2-digit",
-}); // YYYY-MM-DD for grouping
+export const dayKey = (iso: string, tz: string): string =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date(iso)); // YYYY-MM-DD for grouping
 
-export const istTime = (iso: string) => timeFmt.format(new Date(iso));
-export const istDate = (iso: string) => dateFmt.format(new Date(iso));
-export const istDayKey = (iso: string) => dayKeyFmt.format(new Date(iso));
-
-export const istDayLabel = (iso: string) => {
+export const dayLabel = (iso: string, tz: string): string => {
   const d = new Date(iso);
-  const today = istDayKey(new Date().toISOString());
-  const key = istDayKey(iso);
+  const today = dayKey(new Date().toISOString(), tz);
+  const key = dayKey(iso, tz);
   if (key === today) return "Today";
   const tmrw = new Date(Date.now() + 864e5).toISOString();
-  if (key === istDayKey(tmrw)) return "Tomorrow";
+  if (key === dayKey(tmrw, tz)) return "Tomorrow";
   return new Intl.DateTimeFormat("en-IN", {
-    timeZone: IST, weekday: "long", day: "numeric", month: "long",
+    timeZone: tz, weekday: "long", day: "numeric", month: "long",
   }).format(d);
 };
 

@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { DEFAULT_TZ } from "../lib/timezones";
 
 export type Theme = "light" | "dark";
 
 interface UIState {
   theme: Theme;
   toggleTheme: () => void;
+  timezone: string;
+  setTimezone: (tz: string) => void;
 }
 
 const applyTheme = (t: Theme) =>
@@ -14,13 +17,15 @@ const applyTheme = (t: Theme) =>
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
-      theme: (document.documentElement.getAttribute("data-theme") as Theme) ?? "dark",
+      theme: (document.documentElement.getAttribute("data-theme") as Theme) ?? "light",
       toggleTheme: () =>
         set((s) => {
           const next: Theme = s.theme === "dark" ? "light" : "dark";
           applyTheme(next);
           return { theme: next };
         }),
+      timezone: DEFAULT_TZ,
+      setTimezone: (tz: string) => set({ timezone: tz }),
     }),
     {
       name: "wc26:ui",
