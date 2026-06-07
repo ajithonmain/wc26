@@ -2,7 +2,7 @@
 
 > FIFA World Cup 2026 match tracker — live scores, standings, bracket, alerts and a global timezone switcher. Built as a premium glassmorphism PWA with no login required.
 
-**Live:** https://wc26-97d18.web.app
+**Live:** https://wc26.ajithmjose.com
 
 ---
 
