@@ -102,6 +102,11 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                   desc="All 104 matches — group stage through the Final, with live scores and results."
                 />
                 <FeatureRow
+                  icon={<Icon name="search" size={16} />}
+                  title="Global Search"
+                  desc="Search all 48 teams and 1,248 players instantly — no network call. Tap a player result to open their profile and stats directly."
+                />
+                <FeatureRow
                   icon={<Icon name="clock" size={16} />}
                   title="Timezone Switcher"
                   desc="Switch to any timezone and every kickoff time, date rail and header update instantly."
@@ -114,7 +119,7 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                 <FeatureRow
                   icon={<Icon name="users" size={16} />}
                   title="Team Profiles"
-                  desc="Tap any team to see their full squad of 26 players — position, age, jersey number and photo — plus group matches and standings."
+                  desc="Tap any team for their full squad of 26 players — position, age, jersey and photo. Tap any player to see their international caps, goals, height and weight."
                 />
                 <FeatureRow
                   icon={<Icon name="group" size={16} />}
@@ -134,7 +139,7 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
               </div>
 
               {/* Browser Reminder */}
-              <p className="ab-section-label">Browser Reminder</p>
+              <p className="ab-section-label">Match Alerts</p>
               <div className="ab-reminder-box">
                 <div className="flex items-start gap-3">
                   <span className="ab-reminder-icon flex items-center justify-center shrink-0">
@@ -143,7 +148,7 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                   <div>
                     <p className="ab-reminder-title text-sm font-semibold">How it works</p>
                     <p className="ab-reminder-desc text-xs mt-1">
-                      Tap the bell icon on any upcoming match card. Choose to be reminded 30 minutes, 1 hour, or 2 hours before kickoff. You'll receive a notification at the chosen time.
+                      Tap the bell icon on any upcoming match card to set a reminder 1 hour before kickoff. View and manage all your alerts in the Alerts tab.
                     </p>
                   </div>
                 </div>
