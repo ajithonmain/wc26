@@ -45,6 +45,5 @@ scripts/fetchPlayerStats.mjs
 scripts/scrapeFifaSquad.mjs
 
 # Claude / reference docs (not for repo)
-CLAUDE.md
 CLAUDE_CODE_PROMPTS.md
 SPEC.md
