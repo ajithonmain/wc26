@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "./Icon";
-import ThemeToggle from "./ThemeToggle";
 import "../styles/about.css";
 
 interface AboutDrawerProps {
@@ -86,12 +85,9 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                   <p className="ab-app-sub text-xs">FIFA World Cup 2026 Tracker</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <button onClick={onClose} className="ab-close flex items-center justify-center rounded-full" aria-label="Close">
-                  <Icon name="x" size={15} />
-                </button>
-              </div>
+              <button onClick={onClose} className="ab-close flex items-center justify-center rounded-full" aria-label="Close">
+                <Icon name="x" size={15} />
+              </button>
             </div>
 
             {/* Scrollable content */}
