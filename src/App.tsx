@@ -8,7 +8,6 @@ import Knockout from "./views/Knockout";
 import TeamDetail from "./views/TeamDetail";
 import Sidebar from "./components/Sidebar";
 import RightRail from "./components/RightRail";
-import ThemeToggle from "./components/ThemeToggle";
 import TabBar from "./components/TabBar";
 import AlertsDrawer from "./components/AlertsDrawer";
 import Icon from "./components/Icon";
@@ -40,18 +39,21 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
 
   return (
     <header className="app-mobile-header flex items-center justify-between px-4 shrink-0">
-      {/* Left: app icon */}
+      {/* Left: logo — tapping opens About */}
       <div className="flex items-center gap-3">
-        <img
-          src="/logo.svg"
-          alt="World Cup 26"
-          className="app-mobile-brand-icon shrink-0 rounded-[6px]"
-        />
+        <button onClick={() => setAboutOpen(true)} className="shrink-0" aria-label="About">
+          <img
+            src="/logo.svg"
+            alt="World Cup 26"
+            className="app-mobile-brand-icon rounded-[6px]"
+          />
+        </button>
+        <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
       </div>
 
-      {/* Right: install · info · tz · theme · bell */}
+      {/* Right: install · search · tz · bell */}
       <div className="flex items-center gap-2">
-        {/* Install — one-time, leftmost */}
+        {/* Install — one-time, conditional */}
         {showInstall && (
           <button
             onClick={onInstallClick}
@@ -74,19 +76,6 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
         >
           <Icon name="search" size={18} />
         </button>
-
-        {/* Info */}
-        <button
-          onClick={() => setAboutOpen(true)}
-          className="app-mobile-bell glass flex items-center justify-center rounded-full"
-          aria-label="About"
-        >
-          <Icon name="info" size={18} />
-        </button>
-        <AboutDrawer open={aboutOpen} onClose={() => setAboutOpen(false)} />
-
-        {/* Theme */}
-        <ThemeToggle />
 
         {/* Timezone */}
         <button
