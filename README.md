@@ -196,23 +196,6 @@ players → filter name.includes(query) OR lastName.includes(query)
 ```
 All data is in memory (bundles with the app). Zero network calls. Results appear on every keystroke with no debounce needed.
 
-### Alert undo correctness
-When a user removes an alert, a 4-second timer runs before the actual `remove()` store call. If the user closes the drawer before the timer fires:
-- Component unmounts → `useEffect` cleanup runs
-- A `pendingRef` (not state — ref persists through unmount) holds the pending alert
-- Cleanup fires `remove()` immediately rather than cancelling the timer
-- Result: delete always commits, even if the UI disappears first
-
-### Sticky tab background (IntersectionObserver)
-The team detail tab bar background appears only when tabs become sticky:
-```
-<div ref={sentinelRef} style={{ height: 1 }} />  ← placed at bottom of hero
-IntersectionObserver watches sentinel
-  → not intersecting = hero scrolled away = tabs are sticky → show background
-  → intersecting = hero visible = tabs still inline → transparent background
-```
-No scroll event listeners. Performant and exact.
-
 ### Player drawer from search
 Navigating from a search result to a team page carries the selected player via React Router `location.state`:
 ```
