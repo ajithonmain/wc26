@@ -38,6 +38,8 @@ export default function TeamDetail(): React.ReactElement {
   const matchesRef = useRef<HTMLElement>(null);
   const squadRef   = useRef<HTMLElement>(null);
   const standingsRef = useRef<HTMLElement>(null);
+  const programmaticScrollRef = useRef(false);
+  const programmaticScrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const groupMatches = useMemo(
     () =>
@@ -82,6 +84,7 @@ export default function TeamDetail(): React.ReactElement {
     const el = scrollRef.current;
     if (!el) return;
     const onScroll = () => {
+      if (programmaticScrollRef.current) return;
       const containerTop = el.getBoundingClientRect().top;
       const tabBarHeight = tabBarRef.current?.offsetHeight ?? 48;
       const threshold = containerTop + tabBarHeight + 8;
@@ -117,6 +120,11 @@ export default function TeamDetail(): React.ReactElement {
     const sectionTop = section.getBoundingClientRect().top;
     const containerTop = container.getBoundingClientRect().top;
     const scrollTarget = container.scrollTop + (sectionTop - containerTop) - tabBarHeight - 16;
+    programmaticScrollRef.current = true;
+    if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
+    programmaticScrollTimer.current = setTimeout(() => {
+      programmaticScrollRef.current = false;
+    }, 600);
     container.scrollTo({ top: scrollTarget, behavior: "smooth" });
   };
 
