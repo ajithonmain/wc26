@@ -1,0 +1,180 @@
+.pd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.pd-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 51;
+  border-radius: 24px 24px 0 0;
+  background: var(--modal-bg);
+  border-top: 1px solid var(--card-bd);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── Handle ──────────────────────────────────────────────────────────────── */
+
+.pd-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--card-bd);
+  margin: 12px auto 0;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+
+.pd-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--card-bd);
+}
+
+.pd-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  border: 2px solid var(--card-bd);
+  background: var(--glass);
+}
+
+.pd-photo-fallback {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--card-bd);
+  background: var(--glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--meta-text);
+}
+
+.pd-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--txt);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.pd-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pd-number {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-position {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--meta-text);
+}
+
+.pd-club {
+  font-size: 13px;
+  color: var(--meta-text);
+  font-weight: 500;
+}
+
+/* ── Stats grid ──────────────────────────────────────────────────────────── */
+
+.pd-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--card-bd);
+  border-top: 1px solid var(--card-bd);
+  border-bottom: 1px solid var(--card-bd);
+}
+
+.pd-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 16px 8px;
+  background: var(--modal-bg);
+}
+
+.pd-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--txt);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.pd-stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--meta-text);
+}
+
+/* ── Physical row ────────────────────────────────────────────────────────── */
+
+.pd-physical {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 16px 24px;
+}
+
+.pd-phys-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pd-phys-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--txt);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-phys-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--meta-text);
+}
+
+.pd-attribution {
+  font-size: 10px;
+  color: var(--meta-text);
+  text-align: center;
+  padding: 8px 16px 12px;
+  opacity: 0.6;
+}

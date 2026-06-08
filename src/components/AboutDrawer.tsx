@@ -112,6 +112,11 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
                   desc="Star your favourite nations to filter matches and get focused alerts."
                 />
                 <FeatureRow
+                  icon={<Icon name="users" size={16} />}
+                  title="Team Profiles"
+                  desc="Tap any team to see their full squad of 26 players — position, age, jersey number and photo — plus group matches and standings."
+                />
+                <FeatureRow
                   icon={<Icon name="group" size={16} />}
                   title="Group Standings"
                   desc="Live group tables for all 12 groups, updating as results come in."
@@ -159,7 +164,7 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
               {/* Attribution + copyright */}
               <p className="ab-section-label">Data & Credits</p>
               <p className="ab-body-text text-xs">
-                Fixtures from the official FIFA World Cup 2026 draw. Flag images via flagcdn.com.
+                Fixtures and squad data from the official FIFA World Cup 2026™. Player caps and goals via Wikipedia. Flag images via flagcdn.com.
               </p>
               <p className="ab-copyright text-xs mt-4">
                 © 2026 ajithmjose. All rights reserved.

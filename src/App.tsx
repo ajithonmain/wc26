@@ -5,6 +5,7 @@ import MyTeams from "./views/MyTeams";
 import Alerts from "./views/Alerts";
 import Groups from "./views/Groups";
 import Knockout from "./views/Knockout";
+import TeamDetail from "./views/TeamDetail";
 import Sidebar from "./components/Sidebar";
 import RightRail from "./components/RightRail";
 import ThemeToggle from "./components/ThemeToggle";
@@ -19,6 +20,7 @@ import { useUIStore } from "./store/uiSlice";
 import { tzAbbr } from "./lib/timezones";
 import TZPicker from "./components/TimezonePicker";
 import AboutDrawer from "./components/AboutDrawer";
+import SearchOverlay from "./components/SearchOverlay";
 import InstallBanner from "./components/InstallBanner";
 import StorageBanner, { useStorageNoticeShown } from "./components/StorageBanner";
 import "./styles/app.css";
@@ -28,6 +30,7 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
   onInstallClick: () => void;
   showInstall: boolean;
 }): React.ReactElement {
+  const openSearch = useUIStore((s) => s.openSearch);
   const upcomingCount = useAlertsStore((s) =>
     s.alerts.filter((a) => new Date(a.kickoffUTC).getTime() - a.reminderMins * 60_000 > Date.now()).length
   );
@@ -62,6 +65,15 @@ function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
             </svg>
           </button>
         )}
+
+        {/* Search */}
+        <button
+          onClick={openSearch}
+          className="app-mobile-bell glass flex items-center justify-center rounded-full"
+          aria-label="Search"
+        >
+          <Icon name="search" size={18} />
+        </button>
 
         {/* Info */}
         <button
@@ -145,6 +157,7 @@ function AlertsBootstrap(): React.ReactElement | null {
 
 export default function App(): React.ReactElement {
   const [alertsOpen, setAlertsOpen] = useState(false);
+  const { searchOpen, closeSearch } = useUIStore();
   const [installPrompt, setInstallPrompt] = useState<Window["__pwaPrompt"]>(() => window.__pwaPrompt ?? null);
   const [installDismissed, setInstallDismissed] = useState(() => !!localStorage.getItem("wc26:install-dismissed"));
   const [storageShown, setStorageShown] = useState(useStorageNoticeShown);
@@ -196,6 +209,7 @@ export default function App(): React.ReactElement {
             <Routes>
               <Route path="/"         element={<MatchCenter />} />
               <Route path="/teams"    element={<MyTeams />} />
+              <Route path="/teams/:name" element={<TeamDetail />} />
               <Route path="/groups"   element={<Groups />} />
               <Route path="/knockout" element={<Knockout />} />
               <Route path="/alerts"    element={<Alerts />} />
@@ -224,6 +238,7 @@ export default function App(): React.ReactElement {
       <div className="lg:hidden">
         <AlertsDrawer open={alertsOpen} onClose={() => setAlertsOpen(false)} />
       </div>
+      <SearchOverlay open={searchOpen} onClose={closeSearch} />
     </BrowserRouter>
   );
 }

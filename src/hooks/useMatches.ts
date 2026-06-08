@@ -36,6 +36,7 @@ const enrichSlot = (raw: RawSlot, teams: Map<string, Team>): TeamSlot => {
     iso: team?.iso ?? null,
     color: team?.color,
     fifaRank: team?.fifaRank ?? null,
+    fifaCode: team?.fifaCode ?? null,
   };
 };
 

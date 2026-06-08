@@ -47,7 +47,7 @@ function SidebarItem({ label, path, icon, badge }: NavItemDef): React.ReactEleme
 }
 
 export default function Sidebar(): React.ReactElement {
-  const { theme, toggleTheme, timezone } = useUIStore();
+  const { theme, toggleTheme, timezone, openSearch } = useUIStore();
   const alertCount = useAlertsStore((s) => s.alerts.length);
   const allMatches = useMergedMatches();
   const liveCount = useLiveMatches(allMatches).length;
@@ -63,6 +63,16 @@ export default function Sidebar(): React.ReactElement {
       <div className="sb-brand flex items-center">
         <img src="/logo.svg" alt="World Cup 26" className="sb-brand-icon shrink-0 rounded-[6px]" />
       </div>
+
+      {/* ── Search ── */}
+      <button
+        onClick={openSearch}
+        className="sb-search-btn flex items-center w-full transition-colors"
+        aria-label="Search"
+      >
+        <span className="sb-nav-icon shrink-0"><Icon name="search" size={16} /></span>
+        <span className="flex-1 text-left sb-search-label">Search teams & players</span>
+      </button>
 
       {/* ── Tournament ── */}
       <p className="sb-section-label">Tournament</p>

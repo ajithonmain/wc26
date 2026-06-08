@@ -9,6 +9,9 @@ interface UIState {
   toggleTheme: () => void;
   timezone: string;
   setTimezone: (tz: string) => void;
+  searchOpen: boolean;
+  openSearch: () => void;
+  closeSearch: () => void;
 }
 
 const applyTheme = (t: Theme) =>
@@ -26,6 +29,9 @@ export const useUIStore = create<UIState>()(
         }),
       timezone: DEFAULT_TZ,
       setTimezone: (tz: string) => set({ timezone: tz }),
+      searchOpen: false,
+      openSearch: () => set({ searchOpen: true }),
+      closeSearch: () => set({ searchOpen: false }),
     }),
     {
       name: "wc26:ui",

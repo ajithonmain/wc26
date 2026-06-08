@@ -1,0 +1,235 @@
+.td-root {
+  background: var(--bg);
+}
+
+.td-topbar-title {
+  font-size: 14px;
+  color: var(--meta-text);
+}
+
+.td-back-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--txt);
+  flex-shrink: 0;
+}
+
+.td-fav-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--meta-text);
+  flex-shrink: 0;
+}
+
+.td-fav-btn--active {
+  color: #ef4444;
+}
+
+.td-hero {
+  border-bottom: 1px solid var(--card-bd);
+}
+
+.td-flag-ring {
+  width: 88px;
+  height: 88px;
+  background: var(--glass);
+  border: 2px solid var(--card-bd);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--td-team-color, var(--accent)) 15%, transparent);
+}
+
+.td-hero-name {
+  color: var(--txt);
+}
+
+.td-badge-group,
+.td-badge-rank {
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--meta-text);
+}
+
+.td-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--meta-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.td-row--this {
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+
+.td-team-name--this {
+  font-weight: 700;
+  color: var(--txt);
+}
+
+/* ── Sticky tabs ─────────────────────────────────────────────────────────── */
+
+.td-tabs-bar {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.td-tabs-bar--stuck {
+  background: var(--tabbar);
+  border-bottom-color: var(--card-bd);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.td-tab {
+  background: transparent;
+  color: var(--meta-text);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding-bottom: 6px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.td-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Squad position filter tabs ──────────────────────────────────────────── */
+
+.td-pos-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.td-pos-tab {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  color: var(--meta-text);
+  transition: all 0.15s;
+}
+
+.td-pos-tab--active {
+  background: var(--accent);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ── Position group header ───────────────────────────────────────────────── */
+
+.td-pos-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--card-bd);
+}
+
+.td-pos-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--meta-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.td-pos-group-age {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--meta-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Player row ──────────────────────────────────────────────────────────── */
+
+.td-player-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+}
+
+.td-player-row--bordered {
+  border-bottom: 1px solid var(--card-bd);
+}
+
+.td-player-row--tap {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.td-player-row--tap:active {
+  background: var(--glass);
+}
+
+.td-player-photo-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  flex-shrink: 0;
+}
+
+.td-player-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.td-player-photo-fallback {
+  width: 100%;
+  height: 100%;
+  color: var(--meta-text);
+}
+
+.td-player-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--txt);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td-player-club {
+  font-size: 11px;
+  color: var(--meta-text);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td-player-jersey-inline {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--meta-text);
+  margin-left: 5px;
+}
+
+.td-player-age {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--meta-text);
+  flex-shrink: 0;
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

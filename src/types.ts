@@ -15,6 +15,7 @@ export interface TeamSlot {
   iso?: string | null;
   color?: string;
   fifaRank?: number | null;
+  fifaCode?: string | null;
 }
 
 export interface Match {
@@ -43,6 +44,23 @@ export interface Team {
   color: string;
   placeholder: boolean;
   fifaCode?: string;
+}
+
+export type PlayerPosition = "Goalkeeper" | "Defender" | "Midfielder" | "Forward";
+
+export interface Player {
+  id: number | null;
+  fifaId?: string | null;
+  name: string;
+  number: number | null;
+  position: PlayerPosition;
+  age: number | null;
+  caps: number;
+  intlGoals: number;
+  club: string;
+  height: number | null;
+  weight: number | null;
+  photo: string | null;
 }
 
 export interface Stadium {

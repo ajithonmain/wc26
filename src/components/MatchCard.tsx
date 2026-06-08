@@ -74,13 +74,14 @@ function RowCard({ match }: { match: Match }): React.ReactElement {
           {/* Home */}
           <div className="flex items-center gap-2">
             <FlagImg iso={match.home.iso} name={match.home.name} size={20} />
-            <span className="mc-row-team-name flex-1 truncate">
-              {match.home.name}
-            </span>
+            <div className="flex-1 min-w-0">
+              <span className="mc-row-team-name block truncate">{match.home.name}</span>
+              {match.home.fifaCode && match.home.name.length > 14 && (
+                <span className="mc-row-fifa-code">{match.home.fifaCode}</span>
+              )}
+            </div>
             {isScored && (
-              <span
-                className={`mc-row-score font-tabular shrink-0 ml-2${isFT ? (homeWins ? " mc-row-score--winner" : " mc-row-score--loser") : ""}`}
-              >
+              <span className={`mc-row-score font-tabular shrink-0 ml-2${isFT ? (homeWins ? " mc-row-score--winner" : " mc-row-score--loser") : ""}`}>
                 {hg}
               </span>
             )}
@@ -89,13 +90,14 @@ function RowCard({ match }: { match: Match }): React.ReactElement {
           {/* Away */}
           <div className="flex items-center gap-2">
             <FlagImg iso={match.away.iso} name={match.away.name} size={20} />
-            <span className="mc-row-team-name flex-1 truncate">
-              {match.away.name}
-            </span>
+            <div className="flex-1 min-w-0">
+              <span className="mc-row-team-name block truncate">{match.away.name}</span>
+              {match.away.fifaCode && match.away.name.length > 14 && (
+                <span className="mc-row-fifa-code">{match.away.fifaCode}</span>
+              )}
+            </div>
             {isScored && (
-              <span
-                className={`mc-row-score font-tabular shrink-0 ml-2${isFT ? (awayWins ? " mc-row-score--winner" : " mc-row-score--loser") : ""}`}
-              >
+              <span className={`mc-row-score font-tabular shrink-0 ml-2${isFT ? (awayWins ? " mc-row-score--winner" : " mc-row-score--loser") : ""}`}>
                 {ag}
               </span>
             )}

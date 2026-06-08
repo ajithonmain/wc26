@@ -153,3 +153,27 @@
 
 /* ─── Footer / Guest ─────────────────────────────────────────────────────── */
 
+
+/* ─── Search button ──────────────────────────────────────────────────────── */
+
+.sb-search-btn {
+  gap: 13px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--nav-text);
+  background: var(--glass);
+  border: 1px solid var(--card-bd);
+  margin-bottom: 8px;
+  transition: background 0.15s;
+}
+
+.sb-search-btn:hover {
+  background: var(--glass-2);
+}
+
+.sb-search-label {
+  color: var(--meta-text);
+  font-size: 12px;
+}

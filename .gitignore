@@ -35,6 +35,15 @@ poller.js
 serviceAccount.json
 *serviceAccount*.json
 
+# Generated/intermediate scraping output — not for repo
+scripts/squads/
+
+# Obsolete api-football squad scripts (replaced by FIFA pipeline)
+scripts/fetchSquads.mjs
+scripts/retrySquads.mjs
+scripts/fetchPlayerStats.mjs
+scripts/scrapeFifaSquad.mjs
+
 # Claude / reference docs (not for repo)
 CLAUDE.md
 CLAUDE_CODE_PROMPTS.md

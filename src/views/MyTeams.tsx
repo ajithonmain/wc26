@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTeams } from "../hooks/useTeams";
 import { useMergedMatches as useMatches } from "../hooks/useMergedMatches";
@@ -22,9 +23,16 @@ const itemVariants = {
 function TeamCard({ team }: { team: Team }): React.ReactElement {
   const isFav = useFavoritesStore((s) => s.isFav(team.name));
   const toggle = useFavoritesStore((s) => s.toggle);
+  const navigate = useNavigate();
 
   return (
-    <div className={`glass rounded-[var(--r-sm)] flex flex-col items-center gap-1.5 py-3 px-2 relative${isFav ? " mt-card--fav" : ""}`}>
+    <div
+      className={`glass rounded-[var(--r-sm)] flex flex-col items-center gap-1.5 py-3 px-2 relative cursor-pointer${isFav ? " mt-card--fav" : ""}`}
+      onClick={() => navigate(`/teams/${encodeURIComponent(team.name)}`)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter") navigate(`/teams/${encodeURIComponent(team.name)}`); }}
+    >
       <FlagImg iso={team.iso} name={team.name} size={36} />
       <span className="mt-chip-name text-[11px] font-semibold text-center leading-tight w-full truncate">
         {team.name}
@@ -33,7 +41,7 @@ function TeamCard({ team }: { team: Team }): React.ReactElement {
 
       {/* Favourite button */}
       <button
-        onClick={() => toggle(team.name)}
+        onClick={(e) => { e.stopPropagation(); toggle(team.name); }}
         className={`mt-fav-btn${isFav ? " mt-fav-btn--active" : ""}`}
         aria-label={isFav ? `Remove ${team.name} from favourites` : `Favourite ${team.name}`}
         aria-pressed={isFav}

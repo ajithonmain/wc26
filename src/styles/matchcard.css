@@ -38,6 +38,16 @@
   color: var(--txt);
 }
 
+.mc-row-fifa-code {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--meta-text);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-top: 1px;
+  display: block;
+}
+
 .mc-row-score {
   font-family: "Geist Mono", monospace;
   font-size: 14px;
