@@ -175,8 +175,8 @@ useMergedMatches()      — overlays live Firestore data on top of static seed
 
 ### Live scoring (when enabled)
 ```
-Cloudflare Worker (cron, every 60s during live windows)
-  └─ calls football data API server-side
+Server-side poller (runs independently, not part of the frontend build)
+  └─ polls football data API every 60s during live windows
   └─ writes ONE Firestore doc: /live/scores
        { "argentina|france": { status, homeScore, awayScore, minute }, ... }
 
@@ -284,7 +284,7 @@ GET https://api.fifa.com/api/v3/teams/{teamId}/squad?idCompetition=17&idSeason=2
 When a user grants notification permission:
 1. Browser generates an FCM registration token
 2. Token saved to Firestore `/subs/{token}` — no PII attached
-3. A Cloudflare Worker reads `/subs` and sends FCM messages on match events
+3. A server-side process reads `/subs` and fans out FCM push messages on match events (kickoff, goal, half-time, full-time)
 
 **Browser reminders** use the native `Notification` API via `setTimeout` — work without FCM/VAPID.
 
@@ -296,19 +296,19 @@ When a user grants notification permission:
 
 ---
 
-## Live Scores (Cloudflare Worker)
+## Live Scores
 
 ```
-Cloudflare Worker (free cron trigger, every 60s during live windows)
-  └─ polls football data API server-side
+Server-side poller (runs independently)
+  └─ polls football data API every 60s during live match windows
   └─ writes /live/scores: { "team_a|team_b": { status, homeScore, awayScore, minute } }
 
 Browser
   └─ liveSlice.ts → onSnapshot(doc(db, "live", "scores"))
-  └─ LIVE_ENABLED = false in src/config.ts until Worker is deployed
+  └─ LIVE_ENABLED in src/config.ts gates the listener
 ```
 
-**Enable:** set `LIVE_ENABLED = true` in `src/config.ts` and deploy the Worker.
+**Enable:** set `LIVE_ENABLED = true` in `src/config.ts`.
 
 ---
 
@@ -321,7 +321,7 @@ Browser
 | State | Zustand — favorites, alerts, UI/timezone, search; all persisted to `localStorage` |
 | Routing | React Router v6 |
 | Data | Static JSON seed — 104 matches, 48 teams, 1,248 players; fully offline |
-| Live | Firebase Firestore `onSnapshot` + Cloudflare Worker cron poller |
+| Live | Firebase Firestore `onSnapshot` + server-side score poller |
 | Push | Firebase Cloud Messaging (FCM) + Web Push API |
 | PWA | vite-plugin-pwa · Workbox |
 | Hosting | Firebase Hosting |
@@ -375,7 +375,7 @@ firebase deploy --only hosting
 |---|---|
 | `.env` | Firebase config + VAPID key |
 | `serviceAccount.json` | Firebase Admin credentials for push fan-out |
-| `poller.js` / Worker scripts | Live score poller — holds API keys |
+| `poller.js` | Live score poller — runs separately, holds API keys |
 | `scripts/squads/` | Intermediate scraping output — generated, not source |
 | `CLAUDE.md` / `SPEC.md` | Internal project docs |
 
