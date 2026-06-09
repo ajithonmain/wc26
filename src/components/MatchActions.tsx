@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useAlertsStore } from "../store/alertsSlice";
-import { requestPermission, scheduleKickoffAlert, syncAlertsToFirestore } from "../lib/notify";
+import { requestPermission, scheduleKickoffAlert, syncAlertsToFirestore, subscribeToMatchTopic, unsubscribeFromMatchTopic } from "../lib/notify";
 import Icon from "./Icon";
 import type { Match } from "../types";
 
@@ -12,13 +12,12 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
   const isAlerting = useAlertsStore((s) => s.isAlerting(match.id));
   const add = useAlertsStore((s) => s.add);
   const remove = useAlertsStore((s) => s.remove);
+  const alerts = useAlertsStore((s) => s.alerts);
 
   // Only show bell for future NS matches
   const kickoffMs = new Date(match.kickoffUTC).getTime();
   const isFuture = match.status === "NS" && kickoffMs > Date.now() + 60_000;
   if (!isFuture) return null;
-
-  const alerts = useAlertsStore((s) => s.alerts);
 
   const handleToggle = useCallback(
     async (e: React.MouseEvent) => {
@@ -26,6 +25,7 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
       if (isAlerting) {
         remove(match.id);
         void syncAlertsToFirestore(alerts.filter((a) => a.matchId !== match.id));
+        void unsubscribeFromMatchTopic(match.id);
         return;
       }
       const perm = await requestPermission();
@@ -40,6 +40,7 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
       add(entry);
       scheduleKickoffAlert(entry);
       void syncAlertsToFirestore([...alerts, entry]);
+      void subscribeToMatchTopic(match.id);
     },
     [isAlerting, match, add, remove, alerts]
   );

@@ -7,6 +7,7 @@ export interface AlertEntry {
 }
 
 let cachedToken: string | null = null;
+let tokenRegistered = false;
 
 export async function requestPermission(): Promise<NotificationPermission> {
   if (!("Notification" in window)) return "denied";
@@ -21,18 +22,37 @@ export async function requestPermission(): Promise<NotificationPermission> {
 }
 
 async function registerFCMToken(): Promise<void> {
+  if (tokenRegistered) return;
+  tokenRegistered = true;
   try {
     if (!("serviceWorker" in navigator)) return;
-    const { getFCMToken } = await import("./firebase");
-    const { db } = await import("./firebase");
+    const { getFCMToken, db } = await import("./firebase");
     const { doc, setDoc } = await import("firebase/firestore");
     const token = await getFCMToken();
     if (!token) return;
     cachedToken = token;
     await setDoc(doc(db, "subs", token), { token, ts: Date.now() }, { merge: true });
   } catch {
-    // FCM unavailable — browser alerts still work
+    tokenRegistered = false; // allow retry if it failed
   }
+}
+
+export async function subscribeToMatchTopic(matchId: number): Promise<void> {
+  if (!cachedToken) return;
+  try {
+    const { functions } = await import("./firebase");
+    const { httpsCallable } = await import("firebase/functions");
+    await httpsCallable(functions, "subscribeToMatchTopic")({ token: cachedToken, matchId });
+  } catch { /* non-critical — local alert still fires */ }
+}
+
+export async function unsubscribeFromMatchTopic(matchId: number): Promise<void> {
+  if (!cachedToken) return;
+  try {
+    const { functions } = await import("./firebase");
+    const { httpsCallable } = await import("firebase/functions");
+    await httpsCallable(functions, "unsubscribeFromMatchTopic")({ token: cachedToken, matchId });
+  } catch { /* non-critical */ }
 }
 
 export async function syncAlertsToFirestore(alerts: AlertEntry[]): Promise<void> {
