@@ -2,6 +2,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, getToken, onMessage, type Messaging } from "firebase/messaging";
 import { getFunctions } from "firebase/functions";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,6 +14,17 @@ const firebaseConfig = {
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+// App Check: blocks bot/scraper access to Firestore and FCM.
+// Requires VITE_FIREBASE_APP_CHECK_KEY (reCAPTCHA v3 site key) in production.
+// Omitting the key skips App Check — Firestore rules still protect the DB.
+const appCheckKey = import.meta.env.VITE_FIREBASE_APP_CHECK_KEY as string | undefined;
+if (appCheckKey && typeof window !== "undefined") {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(appCheckKey),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
 
 export const db = getFirestore(app);
 export const functions = getFunctions(app);
