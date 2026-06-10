@@ -3,7 +3,7 @@ export interface AlertEntry {
   kickoffUTC: string;
   homeTeam: string;
   awayTeam: string;
-  reminderMins: number; // 15 | 30 | 60
+  reminderMins: number;
 }
 
 let cachedToken: string | null = null;
@@ -80,7 +80,8 @@ export async function syncAlertsToFirestore(alerts: AlertEntry[]): Promise<void>
 }
 
 function reminderLabel(mins: number): string {
-  return mins === 15 ? "15 minutes" : mins === 30 ? "30 minutes" : "1 hour";
+  if (mins < 60) return `${mins} minutes`;
+  return "1 hour";
 }
 
 export function scheduleKickoffAlert(entry: AlertEntry): void {

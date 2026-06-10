@@ -57,14 +57,17 @@ export async function getFCMToken(): Promise<string | null> {
 export function initForegroundMessaging(): void {
   const m = getMessagingInstance();
   if (!m) return;
-  onMessage(m, (payload) => {
+  onMessage(m, async (payload) => {
+    if (Notification.permission !== "granted") return;
     const { title = "WorldCup26", body = "" } = payload.notification ?? {};
-    if (Notification.permission === "granted") {
-      new Notification(title, {
-        body,
-        icon: "/icon-192.png",
-        tag: payload.data?.["tag"] ?? "wc26",
-      });
+    const tag = payload.data?.["tag"] ?? "wc26";
+    const options: NotificationOptions = { body, icon: "/icon-192.png", badge: "/icon-192.png", tag };
+    // Use SW showNotification for reliable Android display; fall back to Notification API
+    const reg = await navigator.serviceWorker.getRegistration().catch(() => undefined);
+    if (reg) {
+      reg.showNotification(title, options);
+    } else {
+      new Notification(title, options);
     }
   });
 }

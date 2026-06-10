@@ -132,7 +132,7 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
                   </span>
                   <span className="flex-1">
                     <span className="as-reminder-title block text-sm font-semibold">
-                      {isAlerting ? `Browser reminder — ${alertEntry?.reminderMins === 30 ? "30 min" : alertEntry?.reminderMins === 120 ? "2 hours" : "1 hour"} before` : "Browser reminder"}
+                      {isAlerting ? `Browser reminder — ${alertEntry?.reminderMins === 15 ? "15 min" : alertEntry?.reminderMins === 30 ? "30 min" : "1 hour"} before` : "Browser reminder"}
                     </span>
                     <span className="as-reminder-sub block text-xs mt-0.5">
                       Remind me before kickoff
@@ -143,9 +143,9 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
                   )}
                 </div>
                 <div className="as-chip-row flex gap-2">
-                  {([30, 60, 120] as const).map((mins) => {
+                  {([15, 30, 60] as const).map((mins) => {
                     const active = isAlerting && alertEntry?.reminderMins === mins;
-                    const lbl = mins === 30 ? "30 min" : mins === 60 ? "1 hour" : "2 hours";
+                    const lbl = mins === 15 ? "15 min" : mins === 30 ? "30 min" : "1 hour";
                     return (
                       <button
                         key={mins}

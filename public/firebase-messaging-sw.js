@@ -19,5 +19,21 @@ messaging.onBackgroundMessage((payload) => {
     icon: "/icon-192.png",
     badge: "/icon-192.png",
     tag: payload.data?.tag ?? "wc26",
+    data: { url: self.registration.scope },
   });
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || self.registration.scope;
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.startsWith(self.registration.scope) && "focus" in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(url);
+    })
+  );
 });

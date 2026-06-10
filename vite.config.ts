@@ -12,6 +12,9 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,png,svg,woff2}"],
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/firebase-cloud-messaging-push-scope/],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
         runtimeCaching: [
           {
             // Cache flag images from flagcdn

@@ -11,6 +11,11 @@ export interface LiveScore {
   events: string;
 }
 
+export interface BracketEntry {
+  home: string;
+  away: string;
+}
+
 type RawScore = {
   home?: string;
   away?: string;
@@ -24,16 +29,17 @@ type RawScore = {
 
 interface LiveState {
   scores: Map<string, LiveScore>;
+  bracket: Map<number, BracketEntry>;
   init: () => (() => void) | undefined;
 }
 
 export const useLiveStore = create<LiveState>()((set) => ({
   scores: new Map(),
+  bracket: new Map(),
   init: () => {
     if (!LIVE_ENABLED) return undefined;
-    // Single document /live/scores holds all live match data as a map.
-    // 1 Firestore read per update regardless of match count — vs N reads with a collection.
-    const unsub = onSnapshot(doc(db, "live", "scores"), (snap) => {
+
+    const unsubScores = onSnapshot(doc(db, "live", "scores"), (snap) => {
       if (!snap.exists()) return;
       const data = snap.data() as Record<string, RawScore>;
       const map = new Map<string, LiveScore>();
@@ -50,6 +56,17 @@ export const useLiveStore = create<LiveState>()((set) => ({
       });
       set({ scores: map });
     });
-    return unsub;
+
+    const unsubBracket = onSnapshot(doc(db, "live", "bracket"), (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data() as Record<string, { home: string; away: string }>;
+      const map = new Map<number, BracketEntry>();
+      Object.entries(data).forEach(([key, d]) => {
+        if (d.home && d.away) map.set(Number(key), { home: d.home, away: d.away });
+      });
+      set({ bracket: map });
+    });
+
+    return () => { unsubScores(); unsubBracket(); };
   },
 }));
