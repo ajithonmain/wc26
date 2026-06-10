@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import { useCallback, useState } from "react";
 import type { Match } from "../types";
 import { useAlertsStore } from "../store/alertsSlice";
-import { requestPermission, scheduleKickoffAlert } from "../lib/notify";
+import { requestPermission, scheduleKickoffAlert, syncAlertsToFirestore } from "../lib/notify";
 import { googleCalendarUrl } from "../lib/calendar";
 import { timeParts } from "../lib/matchUtils";
 import { useUIStore } from "../store/uiSlice";
@@ -49,6 +49,7 @@ function OptionRow({ icon, iconVariant, label, sub, active, last, onClick }: Opt
 export default function ActionSheet({ match, onClose }: ActionSheetProps): React.ReactElement {
   const isAlerting    = useAlertsStore((s) => s.isAlerting(match.id));
   const alertEntry    = useAlertsStore((s) => s.alerts.find((a) => a.matchId === match.id));
+  const alerts        = useAlertsStore((s) => s.alerts);
   const add           = useAlertsStore((s) => s.add);
   const remove        = useAlertsStore((s) => s.remove);
   const [denied, setDenied] = useState(false);
@@ -65,7 +66,9 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
     const entry = { matchId: match.id, kickoffUTC: match.kickoffUTC, homeTeam: match.home.name, awayTeam: match.away.name, reminderMins: mins };
     add(entry);
     scheduleKickoffAlert(entry);
-  }, [match, add, remove]);
+    const updated = [...alerts.filter((a) => a.matchId !== match.id), entry];
+    void syncAlertsToFirestore(updated);
+  }, [match, alerts, add, remove]);
 
   const handleGCal = useCallback(() => {
     window.open(googleCalendarUrl(match), "_blank", "noopener");
@@ -136,7 +139,7 @@ export default function ActionSheet({ match, onClose }: ActionSheetProps): React
                     </span>
                   </span>
                   {isAlerting && (
-                    <button onClick={() => remove(match.id)} className="as-reminder-remove text-xs font-semibold shrink-0">Remove</button>
+                    <button onClick={() => { remove(match.id); void syncAlertsToFirestore(alerts.filter((a) => a.matchId !== match.id)); }} className="as-reminder-remove text-xs font-semibold shrink-0">Remove</button>
                   )}
                 </div>
                 <div className="as-chip-row flex gap-2">

@@ -32,6 +32,17 @@ export async function getFCMToken(): Promise<string | null> {
     const reg = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
       scope: "/firebase-cloud-messaging-push-scope",
     });
+    // Wait for the SW to become active before requesting push subscription
+    if (!reg.active) {
+      await new Promise<void>((resolve) => {
+        const worker = reg.installing ?? reg.waiting;
+        if (!worker) { resolve(); return; }
+        const onStateChange = () => {
+          if (reg.active) { worker.removeEventListener("statechange", onStateChange); resolve(); }
+        };
+        worker.addEventListener("statechange", onStateChange);
+      });
+    }
     const token = await getToken(m, {
       vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
       serviceWorkerRegistration: reg,

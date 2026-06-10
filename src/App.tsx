@@ -14,7 +14,7 @@ import AlertsDrawer from "./components/AlertsDrawer";
 import Icon from "./components/Icon";
 import { useAlertsStore } from "./store/alertsSlice";
 import { useLiveStore } from "./store/liveSlice";
-import { checkOnOpenAlerts } from "./lib/notify";
+import { checkOnOpenAlerts, registerAndSyncAlerts } from "./lib/notify";
 import { initForegroundMessaging } from "./lib/firebase";
 import { useUIStore } from "./store/uiSlice";
 import { tzAbbr } from "./lib/timezones";
@@ -131,6 +131,7 @@ function AlertsBootstrap(): React.ReactElement | null {
   useEffect(() => {
     checkOnOpenAlerts(alerts);
     initForegroundMessaging();
+    if (Notification.permission === "granted") void registerAndSyncAlerts(alerts);
     const unsub = initLive();
     return () => unsub?.();
   // eslint-disable-next-line react-hooks/exhaustive-deps

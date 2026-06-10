@@ -12,13 +12,18 @@ let tokenRegistered = false;
 export async function requestPermission(): Promise<NotificationPermission> {
   if (!("Notification" in window)) return "denied";
   if (Notification.permission === "granted") {
-    void registerFCMToken();
+    await registerFCMToken();
     return "granted";
   }
   if (Notification.permission !== "default") return Notification.permission;
   const perm = await Notification.requestPermission();
-  if (perm === "granted") void registerFCMToken();
+  if (perm === "granted") await registerFCMToken();
   return perm;
+}
+
+export async function registerAndSyncAlerts(alerts: AlertEntry[]): Promise<void> {
+  await registerFCMToken();
+  if (alerts.length > 0) await syncAlertsToFirestore(alerts);
 }
 
 async function registerFCMToken(): Promise<void> {
@@ -32,8 +37,9 @@ async function registerFCMToken(): Promise<void> {
     if (!token) return;
     cachedToken = token;
     await setDoc(doc(db, "subs", token), { token, ts: Date.now() }, { merge: true });
-  } catch {
-    tokenRegistered = false; // allow retry if it failed
+  } catch (e) {
+    console.error("[FCM] registerFCMToken failed:", e);
+    tokenRegistered = false;
   }
 }
 

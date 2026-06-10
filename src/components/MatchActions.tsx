@@ -14,10 +14,8 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
   const remove = useAlertsStore((s) => s.remove);
   const alerts = useAlertsStore((s) => s.alerts);
 
-  // Only show bell for future NS matches
   const kickoffMs = new Date(match.kickoffUTC).getTime();
   const isFuture = match.status === "NS" && kickoffMs > Date.now() + 60_000;
-  if (!isFuture) return null;
 
   const handleToggle = useCallback(
     async (e: React.MouseEvent) => {
@@ -44,6 +42,8 @@ export default function MatchActions({ match }: MatchActionsProps): React.ReactE
     },
     [isAlerting, match, add, remove, alerts]
   );
+
+  if (!isFuture) return null;
 
   return (
     <button
