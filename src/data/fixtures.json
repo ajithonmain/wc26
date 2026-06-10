@@ -756,8 +756,8 @@
     "group": "F",
     "status": "NS",
     "home": {
-      "name": "Japan",
-      "slot": "Japan"
+      "name": "Netherlands",
+      "slot": "Netherlands"
     },
     "away": {
       "name": "Sweden",
@@ -778,12 +778,12 @@
     "group": "F",
     "status": "NS",
     "home": {
-      "name": "Netherlands",
-      "slot": "Netherlands"
-    },
-    "away": {
       "name": "Tunisia",
       "slot": "Tunisia"
+    },
+    "away": {
+      "name": "Japan",
+      "slot": "Japan"
     },
     "score": {
       "home": null,
@@ -800,8 +800,8 @@
     "group": "G",
     "status": "NS",
     "home": {
-      "name": "Egypt",
-      "slot": "Egypt"
+      "name": "Belgium",
+      "slot": "Belgium"
     },
     "away": {
       "name": "Iran",
@@ -822,12 +822,12 @@
     "group": "G",
     "status": "NS",
     "home": {
-      "name": "Belgium",
-      "slot": "Belgium"
-    },
-    "away": {
       "name": "New Zealand",
       "slot": "New Zealand"
+    },
+    "away": {
+      "name": "Egypt",
+      "slot": "Egypt"
     },
     "score": {
       "home": null,
@@ -844,12 +844,12 @@
     "group": "H",
     "status": "NS",
     "home": {
-      "name": "Uruguay",
-      "slot": "Uruguay"
-    },
-    "away": {
       "name": "Spain",
       "slot": "Spain"
+    },
+    "away": {
+      "name": "Saudi Arabia",
+      "slot": "Saudi Arabia"
     },
     "score": {
       "home": null,
@@ -866,12 +866,12 @@
     "group": "H",
     "status": "NS",
     "home": {
-      "name": "Cape Verde",
-      "slot": "Cape Verde"
+      "name": "Uruguay",
+      "slot": "Uruguay"
     },
     "away": {
-      "name": "Saudi Arabia",
-      "slot": "Saudi Arabia"
+      "name": "Cape Verde",
+      "slot": "Cape Verde"
     },
     "score": {
       "home": null,
@@ -888,8 +888,8 @@
     "group": "I",
     "status": "NS",
     "home": {
-      "name": "Senegal",
-      "slot": "Senegal"
+      "name": "Norway",
+      "slot": "Norway"
     },
     "away": {
       "name": "France",
@@ -910,8 +910,8 @@
     "group": "I",
     "status": "NS",
     "home": {
-      "name": "Norway",
-      "slot": "Norway"
+      "name": "Senegal",
+      "slot": "Senegal"
     },
     "away": {
       "name": "Iraq",
@@ -932,12 +932,12 @@
     "group": "J",
     "status": "NS",
     "home": {
-      "name": "Algeria",
-      "slot": "Algeria"
-    },
-    "away": {
       "name": "Argentina",
       "slot": "Argentina"
+    },
+    "away": {
+      "name": "Austria",
+      "slot": "Austria"
     },
     "score": {
       "home": null,
@@ -958,8 +958,8 @@
       "slot": "Jordan"
     },
     "away": {
-      "name": "Austria",
-      "slot": "Austria"
+      "name": "Algeria",
+      "slot": "Algeria"
     },
     "score": {
       "home": null,

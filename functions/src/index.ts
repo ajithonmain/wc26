@@ -1,6 +1,5 @@
 import * as admin from "firebase-admin";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { onCall } from "firebase-functions/v2/https";
 import { defineSecret } from "firebase-functions/params";
 import type { LiveSnapshot } from "./liveProvider";
 import { getLive } from "./liveProvider";
@@ -16,6 +15,7 @@ const db = admin.firestore();
 interface FixtureEntry {
   id: number;
   kickoffUTC: string;
+  round: string;
   home: { name: string };
   away: { name: string };
 }
@@ -24,13 +24,19 @@ const fixtures = require("../../src/data/fixtures.json") as FixtureEntry[];
 const fixtureMap = new Map<number, FixtureEntry>(fixtures.map((f) => [f.id, f]));
 
 const LIVE_WINDOW_MS    = 115 * 60 * 1000;
+// Knockout matches can run extra time + penalties (~160-170 min)
+const LIVE_WINDOW_KO_MS = 185 * 60 * 1000;
 const REMINDER_MINS     = 60;
 const REMINDER_WINDOW_S = 5 * 60;
+
+function liveWindowMs(f: FixtureEntry): number {
+  return f.round.startsWith("Group") ? LIVE_WINDOW_MS : LIVE_WINDOW_KO_MS;
+}
 
 function anyMatchLiveByTime(now: number): boolean {
   return fixtures.some((f) => {
     const kick = new Date(f.kickoffUTC).getTime();
-    return now >= kick && now <= kick + LIVE_WINDOW_MS;
+    return now >= kick && now <= kick + liveWindowMs(f);
   });
 }
 
@@ -38,7 +44,7 @@ function liveMatchMinutes(now: number): number[] {
   return fixtures
     .filter((f) => {
       const kick = new Date(f.kickoffUTC).getTime();
-      return now >= kick && now <= kick + LIVE_WINDOW_MS;
+      return now >= kick && now <= kick + liveWindowMs(f);
     })
     .map((f) => Math.floor((now - new Date(f.kickoffUTC).getTime()) / 60000));
 }
@@ -293,32 +299,5 @@ export const pollLiveScores = onSchedule(
   }
 );
 
-// ─── Topic subscription callables ────────────────────────────────────────────
-
-export const subscribeToMatchTopic = onCall(async (request) => {
-  const { token, matchId } = request.data as { token: string; matchId: number };
-  if (!token || !matchId) throw new Error("token and matchId required");
-  await admin.messaging().subscribeToTopic([token], `wc26-match-${matchId}`);
-  return { ok: true };
-});
-
-export const unsubscribeFromMatchTopic = onCall(async (request) => {
-  const { token, matchId } = request.data as { token: string; matchId: number };
-  if (!token || !matchId) throw new Error("token and matchId required");
-  await admin.messaging().unsubscribeFromTopic([token], `wc26-match-${matchId}`);
-  return { ok: true };
-});
-
-export const subscribeToTeamTopic = onCall(async (request) => {
-  const { token, teamName } = request.data as { token: string; teamName: string };
-  if (!token || !teamName) throw new Error("token and teamName required");
-  await admin.messaging().subscribeToTopic([token], `wc26-team-${teamSlug(teamName)}`);
-  return { ok: true };
-});
-
-export const unsubscribeFromTeamTopic = onCall(async (request) => {
-  const { token, teamName } = request.data as { token: string; teamName: string };
-  if (!token || !teamName) throw new Error("token and teamName required");
-  await admin.messaging().unsubscribeFromTopic([token], `wc26-team-${teamSlug(teamName)}`);
-  return { ok: true };
-});
+// Topic subscriptions are handled by the VPS poller reading subs/{token} every 60s.
+// Cloud Functions callables are not needed.

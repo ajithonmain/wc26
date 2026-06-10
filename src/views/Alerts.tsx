@@ -193,6 +193,7 @@ export default function Alerts(): React.ReactElement {
     setPending(alert);
     timerRef.current = setTimeout(() => {
       remove(alert.matchId);
+      void syncAlertsToFirestore(useAlertsStore.getState().alerts);
       pendingRef.current = null;
       setPending(null);
     }, 4000);
@@ -210,6 +211,7 @@ export default function Alerts(): React.ReactElement {
       clearTimeout(timerRef.current);
       if (pendingRef.current) {
         remove(pendingRef.current.matchId);
+        void syncAlertsToFirestore(useAlertsStore.getState().alerts);
       }
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -252,6 +254,7 @@ export default function Alerts(): React.ReactElement {
 
   const handleClear = () => {
     tab === "past" ? clearPast() : clearAll();
+    void syncAlertsToFirestore(useAlertsStore.getState().alerts);
     setShowConfirm(false);
   };
 

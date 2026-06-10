@@ -250,10 +250,9 @@ function HeroCard({
 
         {/* Goalscorer events — two columns */}
         {match.events && (() => {
-          const goals = match.events.split(" · ").map(e => e.trim()).filter(Boolean);
-          const mid = Math.ceil(goals.length / 2);
-          const homeGoals = goals.slice(0, mid);
-          const awayGoals = goals.slice(mid);
+          const [homeBlob = "", awayBlob = ""] = match.events.split("|");
+          const homeGoals = homeBlob.split(/[,;]/).map(e => e.trim()).filter(Boolean);
+          const awayGoals = awayBlob.split(/[,;]/).map(e => e.trim()).filter(Boolean);
           return (
             <div className="mc-hero-events grid px-5 pb-4 pt-3 gap-x-4">
               <div className="flex flex-col gap-1">

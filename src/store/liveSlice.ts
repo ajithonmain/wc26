@@ -45,13 +45,16 @@ export const useLiveStore = create<LiveState>()((set) => ({
       const map = new Map<string, LiveScore>();
       Object.entries(data).forEach(([key, d]) => {
         if (!d.home || !d.away) return;
-        const parts = [d.homeScorers, d.awayScorers].filter(Boolean).join(" · ");
+        // "homeScorers|awayScorers" — sides explicit so the card can attribute columns
+        const events = d.homeScorers || d.awayScorers
+          ? `${d.homeScorers ?? ""}|${d.awayScorers ?? ""}`
+          : "";
         map.set(key, {
           status: d.status ?? "NS",
           homeScore: d.homeScore ?? 0,
           awayScore: d.awayScore ?? 0,
           minute: d.minute ?? null,
-          events: parts,
+          events,
         });
       });
       set({ scores: map });

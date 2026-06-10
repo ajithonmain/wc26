@@ -1,0 +1,22 @@
+.error-boundary-card {
+  padding: 28px 32px;
+  border-radius: var(--r-lg);
+  max-width: 320px;
+}
+
+.error-boundary-title {
+  font-size: 17px;
+  color: var(--txt);
+}
+
+.error-boundary-body {
+  color: var(--dim);
+}
+
+.error-boundary-btn {
+  margin-top: 4px;
+  padding: 8px 20px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--txt);
+}

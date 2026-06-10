@@ -25,6 +25,15 @@ export default defineConfig({
               expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
           },
+          {
+            // Cache player photos from api-sports
+            urlPattern: /^https:\/\/media\.api-sports\.io\//,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "players-cache",
+              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
         ],
       },
     }),

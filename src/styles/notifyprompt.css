@@ -1,0 +1,75 @@
+.np-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.np-card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--modal-bg);
+  border-radius: 18px;
+  padding: 24px 20px 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: ib-slide-up 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.np-bell {
+  width: 44px;
+  height: 44px;
+  background: var(--glass-2);
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.np-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--txt);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.np-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--meta-text);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.np-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  transition: opacity 0.15s;
+}
+
+.np-btn:hover {
+  opacity: 0.88;
+}
+
+.np-btn:disabled {
+  opacity: 0.6;
+}
+
+.np-later {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dim);
+}

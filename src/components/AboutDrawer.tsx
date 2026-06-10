@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "./Icon";
@@ -30,6 +30,19 @@ function FeatureRow({ icon, title, desc }: FeatureRowProps): React.ReactElement 
 }
 
 export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.ReactElement {
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    import("../lib/notify").then(({ getCachedToken, fetchToken, notificationsGranted }) => {
+      // Never fetch without granted permission — getToken would trigger the permission prompt
+      if (!notificationsGranted()) { setFcmToken("notifications not enabled"); return; }
+      const cached = getCachedToken();
+      if (cached) { setFcmToken(cached); return; }
+      fetchToken().then((t) => setFcmToken(t ?? "unavailable"));
+    });
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -158,6 +171,12 @@ export default function AboutDrawer({ open, onClose }: AboutDrawerProps): React.
               <p className="ab-section-label">Install as App</p>
               <p className="ab-body-text text-xs">
                 Tap the Install button in the topbar (Android / Chrome) or use Share → Add to Home Screen (iOS) to install World Cup 26 as a standalone app. Updates automatically in the background.
+              </p>
+
+              {/* FCM token — for testing only */}
+              <p className="ab-section-label">FCM Token</p>
+              <p className="ab-body-text text-xs break-all select-all" style={{ fontFamily: "monospace", opacity: 0.6 }}>
+                {fcmToken ?? "loading..."}
               </p>
 
               {/* Tech */}

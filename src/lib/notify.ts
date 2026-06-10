@@ -9,7 +9,25 @@ export interface AlertEntry {
 let cachedToken: string | null = null;
 let tokenRegistered = false;
 
-// Must match teamSlug() in functions/src/index.ts
+// iOS Safari outside an installed PWA has no Notification global
+export function notificationsGranted(): boolean {
+  return "Notification" in window && Notification.permission === "granted";
+}
+
+export function getCachedToken(): string | null { return cachedToken; }
+
+export async function fetchToken(): Promise<string | null> {
+  try {
+    const { getFCMToken } = await import("./firebase");
+    const t = await getFCMToken();
+    if (t) cachedToken = t;
+    return t;
+  } catch (e) {
+    console.error("[FCM] fetchToken failed:", e);
+    return null;
+  }
+}
+
 export function teamSlug(name: string): string {
   return name
     .normalize("NFD")
@@ -53,42 +71,10 @@ async function registerFCMToken(): Promise<void> {
   }
 }
 
-export async function subscribeToMatchTopic(matchId: number): Promise<void> {
-  if (!cachedToken) return;
-  try {
-    const { functions } = await import("./firebase");
-    const { httpsCallable } = await import("firebase/functions");
-    await httpsCallable(functions, "subscribeToMatchTopic")({ token: cachedToken, matchId });
-  } catch { /* non-critical — local alert still fires */ }
-}
-
-export async function unsubscribeFromMatchTopic(matchId: number): Promise<void> {
-  if (!cachedToken) return;
-  try {
-    const { functions } = await import("./firebase");
-    const { httpsCallable } = await import("firebase/functions");
-    await httpsCallable(functions, "unsubscribeFromMatchTopic")({ token: cachedToken, matchId });
-  } catch { /* non-critical */ }
-}
-
-export async function subscribeToTeamTopic(teamName: string): Promise<void> {
-  if (!cachedToken) await registerFCMToken();
-  if (!cachedToken) return;
-  try {
-    const { functions } = await import("./firebase");
-    const { httpsCallable } = await import("firebase/functions");
-    await httpsCallable(functions, "subscribeToTeamTopic")({ token: cachedToken, teamName });
-  } catch { /* non-critical */ }
-}
-
-export async function unsubscribeFromTeamTopic(teamName: string): Promise<void> {
-  if (!cachedToken) return;
-  try {
-    const { functions } = await import("./firebase");
-    const { httpsCallable } = await import("firebase/functions");
-    await httpsCallable(functions, "unsubscribeFromTeamTopic")({ token: cachedToken, teamName });
-  } catch { /* non-critical */ }
-}
+// Match topic subscribe/unsubscribe are no-ops — the VPS poller handles
+// FCM topic subscriptions by reading subs/{token} every 60s.
+export async function subscribeToMatchTopic(_matchId: number): Promise<void> { /* handled by VPS */ }
+export async function unsubscribeFromMatchTopic(_matchId: number): Promise<void> { /* handled by VPS */ }
 
 export async function syncAlertsToFirestore(alerts: AlertEntry[]): Promise<void> {
   try {
@@ -108,6 +94,18 @@ export async function syncAlertsToFirestore(alerts: AlertEntry[]): Promise<void>
   }
 }
 
+export async function syncFavoritesToFirestore(favorites: string[]): Promise<void> {
+  if (!cachedToken) await registerFCMToken();
+  if (!cachedToken) return;
+  try {
+    const { db } = await import("./firebase");
+    const { doc, setDoc } = await import("firebase/firestore");
+    await setDoc(doc(db, "subs", cachedToken), { favorites }, { merge: true });
+  } catch {
+    // Non-critical — VPS will pick up on next checkReminders cycle
+  }
+}
+
 function reminderLabel(mins: number): string {
   if (mins < 60) return `${mins} minutes`;
   return "1 hour";
@@ -119,7 +117,7 @@ export function scheduleKickoffAlert(entry: AlertEntry): void {
   const delay = alertMs - Date.now();
   if (delay <= 0 || delay > 14 * 24 * 60 * 60 * 1000) return;
   setTimeout(() => {
-    if (Notification.permission === "granted") {
+    if (notificationsGranted()) {
       new Notification(`${entry.homeTeam} vs ${entry.awayTeam}`, {
         body: `Kicks off in ${reminderLabel(mins)}!`,
         tag: `wc26-remind-${entry.matchId}`,
@@ -130,7 +128,7 @@ export function scheduleKickoffAlert(entry: AlertEntry): void {
 }
 
 export function checkOnOpenAlerts(alerts: AlertEntry[]): void {
-  if (Notification.permission !== "granted") return;
+  if (!notificationsGranted()) return;
   const now = Date.now();
   for (const a of alerts) {
     const kickoffMs = new Date(a.kickoffUTC).getTime();

@@ -5,6 +5,7 @@ functions/node_modules
 # Build output
 dist
 .firebase
+functions/lib
 
 # Environment
 .env

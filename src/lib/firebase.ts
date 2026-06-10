@@ -19,7 +19,8 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 // Requires VITE_FIREBASE_APP_CHECK_KEY (reCAPTCHA v3 site key) in production.
 // Omitting the key skips App Check — Firestore rules still protect the DB.
 const appCheckKey = import.meta.env.VITE_FIREBASE_APP_CHECK_KEY as string | undefined;
-if (appCheckKey && typeof window !== "undefined") {
+const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+if (appCheckKey && !isLocalhost) {
   initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider(appCheckKey),
     isTokenAutoRefreshEnabled: true,
@@ -67,6 +68,7 @@ export async function getFCMToken(): Promise<string | null> {
 }
 
 export function initForegroundMessaging(): void {
+  if (typeof Notification === "undefined") return;
   const m = getMessagingInstance();
   if (!m) return;
   onMessage(m, async (payload) => {

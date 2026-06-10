@@ -14,7 +14,7 @@ import AlertsDrawer from "./components/AlertsDrawer";
 import Icon from "./components/Icon";
 import { useAlertsStore } from "./store/alertsSlice";
 import { useLiveStore } from "./store/liveSlice";
-import { checkOnOpenAlerts, registerAndSyncAlerts } from "./lib/notify";
+import { checkOnOpenAlerts, registerAndSyncAlerts, notificationsGranted } from "./lib/notify";
 import { initForegroundMessaging } from "./lib/firebase";
 import { useFavoriteTopicSync } from "./hooks/useFavoriteTopicSync";
 import { useUIStore } from "./store/uiSlice";
@@ -22,8 +22,10 @@ import { tzAbbr } from "./lib/timezones";
 import TZPicker from "./components/TimezonePicker";
 import AboutDrawer from "./components/AboutDrawer";
 import SearchOverlay from "./components/SearchOverlay";
+import ErrorBoundary from "./components/ErrorBoundary";
 import InstallBanner from "./components/InstallBanner";
 import StorageBanner, { useStorageNoticeShown } from "./components/StorageBanner";
+import NotifyPrompt from "./components/NotifyPrompt";
 import "./styles/app.css";
 
 function MobileHeader({ onBellClick, onInstallClick, showInstall }: {
@@ -133,7 +135,7 @@ function AlertsBootstrap(): React.ReactElement | null {
   useEffect(() => {
     checkOnOpenAlerts(alerts);
     initForegroundMessaging();
-    if (Notification.permission === "granted") void registerAndSyncAlerts(alerts);
+    if (notificationsGranted()) void registerAndSyncAlerts(alerts);
     const unsub = initLive();
     return () => unsub?.();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,15 +209,17 @@ export default function App(): React.ReactElement {
 
           {/* Page content — extra bottom padding on mobile for fixed TabBar */}
           <main className="flex-1 overflow-hidden min-h-0 lg:pb-0 pb-[calc(60px+env(safe-area-inset-bottom))]">
-            <Routes>
-              <Route path="/"         element={<MatchCenter />} />
-              <Route path="/teams"    element={<MyTeams />} />
-              <Route path="/teams/:name" element={<TeamDetail />} />
-              <Route path="/groups"   element={<Groups />} />
-              <Route path="/knockout" element={<Knockout />} />
-              <Route path="/alerts"    element={<Alerts />} />
-              <Route path="/match/:id" element={<ComingSoon label="Match Detail" />} />
-            </Routes>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/"         element={<MatchCenter />} />
+                <Route path="/teams"    element={<MyTeams />} />
+                <Route path="/teams/:name" element={<TeamDetail />} />
+                <Route path="/groups"   element={<Groups />} />
+                <Route path="/knockout" element={<Knockout />} />
+                <Route path="/alerts"    element={<Alerts />} />
+                <Route path="/match/:id" element={<ComingSoon label="Match Detail" />} />
+              </Routes>
+            </ErrorBoundary>
           </main>
 
           {/* Mobile bottom tab bar */}
@@ -235,6 +239,7 @@ export default function App(): React.ReactElement {
         onDismiss={() => setInstallDismissed(true)}
       />
       <StorageBanner onDismiss={() => setStorageShown(true)} />
+      <NotifyPrompt storageShown={storageShown} />
       {/* Alerts drawer — mobile only */}
       <div className="lg:hidden">
         <AlertsDrawer open={alertsOpen} onClose={() => setAlertsOpen(false)} />

@@ -16,7 +16,7 @@ service cloud.firestore {
 
       allow create, update: if
         // Doc must contain only these fields
-        request.resource.data.keys().hasOnly(['token', 'ts', 'alerts']) &&
+        request.resource.data.keys().hasOnly(['token', 'ts', 'alerts', 'favorites']) &&
         // token: non-empty string, minimum FCM token length (152+ chars)
         request.resource.data.token is string &&
         request.resource.data.token.size() >= 100 &&
@@ -28,6 +28,14 @@ service cloud.firestore {
           (
             request.resource.data.alerts is list &&
             request.resource.data.alerts.size() <= 50
+          )
+        ) &&
+        // favorites: optional list of team names, capped at 48 (total WC teams)
+        (
+          !('favorites' in request.resource.data) ||
+          (
+            request.resource.data.favorites is list &&
+            request.resource.data.favorites.size() <= 48
           )
         );
 
