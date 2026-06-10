@@ -16,6 +16,7 @@ import { useAlertsStore } from "./store/alertsSlice";
 import { useLiveStore } from "./store/liveSlice";
 import { checkOnOpenAlerts, registerAndSyncAlerts } from "./lib/notify";
 import { initForegroundMessaging } from "./lib/firebase";
+import { useFavoriteTopicSync } from "./hooks/useFavoriteTopicSync";
 import { useUIStore } from "./store/uiSlice";
 import { tzAbbr } from "./lib/timezones";
 import TZPicker from "./components/TimezonePicker";
@@ -128,6 +129,7 @@ function ComingSoon({ label }: { label: string }): React.ReactElement {
 function AlertsBootstrap(): React.ReactElement | null {
   const alerts = useAlertsStore((s) => s.alerts);
   const initLive = useLiveStore((s) => s.init);
+  useFavoriteTopicSync();
   useEffect(() => {
     checkOnOpenAlerts(alerts);
     initForegroundMessaging();

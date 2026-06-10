@@ -9,6 +9,16 @@ export interface AlertEntry {
 let cachedToken: string | null = null;
 let tokenRegistered = false;
 
+// Must match teamSlug() in functions/src/index.ts
+export function teamSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export async function requestPermission(): Promise<NotificationPermission> {
   if (!("Notification" in window)) return "denied";
   if (Notification.permission === "granted") {
@@ -58,6 +68,25 @@ export async function unsubscribeFromMatchTopic(matchId: number): Promise<void> 
     const { functions } = await import("./firebase");
     const { httpsCallable } = await import("firebase/functions");
     await httpsCallable(functions, "unsubscribeFromMatchTopic")({ token: cachedToken, matchId });
+  } catch { /* non-critical */ }
+}
+
+export async function subscribeToTeamTopic(teamName: string): Promise<void> {
+  if (!cachedToken) await registerFCMToken();
+  if (!cachedToken) return;
+  try {
+    const { functions } = await import("./firebase");
+    const { httpsCallable } = await import("firebase/functions");
+    await httpsCallable(functions, "subscribeToTeamTopic")({ token: cachedToken, teamName });
+  } catch { /* non-critical */ }
+}
+
+export async function unsubscribeFromTeamTopic(teamName: string): Promise<void> {
+  if (!cachedToken) return;
+  try {
+    const { functions } = await import("./firebase");
+    const { httpsCallable } = await import("firebase/functions");
+    await httpsCallable(functions, "unsubscribeFromTeamTopic")({ token: cachedToken, teamName });
   } catch { /* non-critical */ }
 }
 

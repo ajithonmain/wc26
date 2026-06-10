@@ -49,6 +49,16 @@ function isHotWindow(elapsedMinutes: number[]): boolean {
   );
 }
 
+// ─── Team slug — must match teamSlug() in notify.ts ──────────────────────────
+function teamSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 // ─── Score record — must match RawScore in liveSlice ─────────────────────────
 interface ScoreRecord {
   home: string;
@@ -59,13 +69,15 @@ interface ScoreRecord {
   minute: number | null;
 }
 type ScoresMap = Record<string, ScoreRecord>;
+type BracketData = Record<string, { home: string; away: string }>;
 
-function buildRecord(snap: LiveSnapshot): ScoreRecord | null {
+function buildRecord(snap: LiveSnapshot, bracket: BracketData): ScoreRecord | null {
   const f = fixtureMap.get(snap.id);
   if (!f) return null;
+  const b = bracket[String(snap.id)];
   return {
-    home:      f.home.name,
-    away:      f.away.name,
+    home:      b?.home ?? f.home.name,
+    away:      b?.away ?? f.away.name,
     status:    snap.status,
     homeScore: snap.score.home ?? 0,
     awayScore: snap.score.away ?? 0,
@@ -81,6 +93,8 @@ interface PushEvent {
   type: EventType;
   title: string;
   body: string;
+  home: string;
+  away: string;
 }
 
 function detectEvents(prev: ScoresMap, next: ScoresMap): PushEvent[] {
@@ -92,6 +106,7 @@ function detectEvents(prev: ScoresMap, next: ScoresMap): PushEvent[] {
     if (!old) {
       if (cur.status === "LIVE") {
         events.push({ matchId: id, type: "KICKOFF",
+          home: cur.home, away: cur.away,
           title: `${cur.home} vs ${cur.away}`,
           body:  "Kickoff! The match has started." });
       }
@@ -100,6 +115,7 @@ function detectEvents(prev: ScoresMap, next: ScoresMap): PushEvent[] {
 
     if (old.status !== "LIVE" && cur.status === "LIVE") {
       events.push({ matchId: id, type: "KICKOFF",
+        home: cur.home, away: cur.away,
         title: `${cur.home} vs ${cur.away}`,
         body:  "Kickoff! The match has started." });
     }
@@ -108,12 +124,14 @@ function detectEvents(prev: ScoresMap, next: ScoresMap): PushEvent[] {
         (cur.homeScore > old.homeScore || cur.awayScore > old.awayScore)) {
       const scorer = cur.homeScore > old.homeScore ? cur.home : cur.away;
       events.push({ matchId: id, type: "GOAL",
+        home: cur.home, away: cur.away,
         title: `GOAL! ${cur.home} ${cur.homeScore}–${cur.awayScore} ${cur.away}`,
         body:  `${scorer} score!` });
     }
 
     if ((old.status === "LIVE" || old.status === "HT") && cur.status === "FT") {
       events.push({ matchId: id, type: "FULLTIME",
+        home: cur.home, away: cur.away,
         title: `FT: ${cur.home} ${cur.homeScore}–${cur.awayScore} ${cur.away}`,
         body:  "Full time." });
     }
@@ -121,26 +139,48 @@ function detectEvents(prev: ScoresMap, next: ScoresMap): PushEvent[] {
   return events;
 }
 
-// ─── FCM helpers — topic-based, zero /subs reads per event ───────────────────
+// ─── FCM helpers ──────────────────────────────────────────────────────────────
+
+async function sendToTopic(topic: string, ev: PushEvent): Promise<void> {
+  await admin.messaging().send({
+    topic,
+    notification: { title: ev.title, body: ev.body },
+    data: { matchId: String(ev.matchId), type: ev.type },
+    webpush: {
+      headers: { Urgency: "high" },
+      notification: {
+        icon: "/icon-192.png",
+        tag: `wc26-${ev.type.toLowerCase()}-${ev.matchId}`,
+      },
+    },
+  });
+}
 
 async function sendEventPushes(events: PushEvent[]): Promise<void> {
   for (const ev of events) {
-    const topic = `wc26-match-${ev.matchId}`;
+    // Match topic — users who set a reminder for this specific match
     try {
-      await admin.messaging().send({
-        topic,
-        notification: { title: ev.title, body: ev.body },
-        data: { matchId: String(ev.matchId), type: ev.type },
-        webpush: {
-          notification: {
-            icon: "/icon-192.png",
-            tag: `wc26-${ev.type.toLowerCase()}-${ev.matchId}`,
-          },
-        },
-      });
-      console.log(`[FCM-TOPIC] ${topic} — ${ev.type}`);
+      await sendToTopic(`wc26-match-${ev.matchId}`, ev);
+      console.log(`[FCM-MATCH] wc26-match-${ev.matchId} — ${ev.type}`);
     } catch (e) {
-      console.error("[FCM-TOPIC ERROR]", (e as Error).message);
+      console.error("[FCM-MATCH ERROR]", (e as Error).message);
+    }
+
+    // Team topics — users who favorited either team (GOAL and KICKOFF only)
+    if (ev.type === "GOAL" || ev.type === "KICKOFF") {
+      for (const teamName of [ev.home, ev.away]) {
+        const teamTopic = `wc26-team-${teamSlug(teamName)}`;
+        try {
+          await sendToTopic(teamTopic, ev);
+          console.log(`[FCM-TEAM] ${teamTopic} — ${ev.type}`);
+        } catch (e) {
+          // No subscribers on this topic is a normal 404 — not a real error
+          const msg = (e as Error).message ?? "";
+          if (!msg.includes("no tokens") && !msg.includes("SENDER_ID_MISMATCH")) {
+            console.error(`[FCM-TEAM ERROR] ${teamTopic}`, msg);
+          }
+        }
+      }
     }
   }
 }
@@ -172,7 +212,10 @@ async function sendReminderPushes(now: number): Promise<void> {
           body: "Kicks off in 1 hour!",
         },
         data: { matchId: String(f.id), type: "REMINDER" },
-        webpush: { notification: { icon: "/icon-192.png", tag: `wc26-reminder-${f.id}` } },
+        webpush: {
+          headers: { Urgency: "high" },
+          notification: { icon: "/icon-192.png", tag: `wc26-reminder-${f.id}` },
+        },
       });
     } catch (e) {
       console.error("[REMINDER-TOPIC ERROR]", (e as Error).message);
@@ -192,12 +235,16 @@ async function pollAndWrite(keys: { apiFootball: string; highlightly: string; fo
     return;
   }
 
-  const prevDoc    = await db.doc("live/scores").get();
+  const [prevDoc, bracketDoc] = await Promise.all([
+    db.doc("live/scores").get(),
+    db.doc("live/bracket").get(),
+  ]);
   const prevScores = (prevDoc.data() ?? {}) as ScoresMap;
+  const bracket    = (bracketDoc.data() ?? {}) as BracketData;
 
   const newScores: ScoresMap = {};
   for (const snap of snapshots) {
-    const record = buildRecord(snap);
+    const record = buildRecord(snap, bracket);
     if (record) newScores[String(snap.id)] = record;
   }
 
@@ -246,7 +293,7 @@ export const pollLiveScores = onSchedule(
   }
 );
 
-// ─── Topic subscription callables — invoked from browser on alert add/remove ─
+// ─── Topic subscription callables ────────────────────────────────────────────
 
 export const subscribeToMatchTopic = onCall(async (request) => {
   const { token, matchId } = request.data as { token: string; matchId: number };
@@ -259,5 +306,19 @@ export const unsubscribeFromMatchTopic = onCall(async (request) => {
   const { token, matchId } = request.data as { token: string; matchId: number };
   if (!token || !matchId) throw new Error("token and matchId required");
   await admin.messaging().unsubscribeFromTopic([token], `wc26-match-${matchId}`);
+  return { ok: true };
+});
+
+export const subscribeToTeamTopic = onCall(async (request) => {
+  const { token, teamName } = request.data as { token: string; teamName: string };
+  if (!token || !teamName) throw new Error("token and teamName required");
+  await admin.messaging().subscribeToTopic([token], `wc26-team-${teamSlug(teamName)}`);
+  return { ok: true };
+});
+
+export const unsubscribeFromTeamTopic = onCall(async (request) => {
+  const { token, teamName } = request.data as { token: string; teamName: string };
+  if (!token || !teamName) throw new Error("token and teamName required");
+  await admin.messaging().unsubscribeFromTopic([token], `wc26-team-${teamSlug(teamName)}`);
   return { ok: true };
 });
