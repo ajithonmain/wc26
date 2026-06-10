@@ -52,6 +52,7 @@ Most World Cup apps are either too basic or bloated with accounts, ads and slow 
 
 ### Knockout Bracket
 - Full R32 → R16 → QF → SF → Final tree
+- Placeholder slots auto-fill with real teams as the tournament progresses — no manual update needed
 - Desktop: horizontal bracket with connector lines
 - Mobile: round-by-round tab navigation
 
@@ -61,7 +62,9 @@ Most World Cup apps are either too basic or bloated with accounts, ads and slow 
 - Persisted across sessions — no account needed
 
 ### Alerts & Reminders
-- Set a browser reminder 15 min, 30 min or 1 hr before any match
+- Set a push reminder **15 min, 30 min or 1 hr** before any match
+- Notifications delivered via **Firebase Cloud Messaging** — fire even when the app is closed or the screen is off
+- **GOAL, KICKOFF, HALF TIME, FULL TIME** push events for every live match
 - **Google Calendar** — one-tap adds the match as a calendar event
 - Undo support when removing alerts
 - Alerts view with upcoming / past tabs
@@ -142,7 +145,9 @@ All icons are inline SVG — no external font, no extra request, no license.
 
 Static JSON seed data (fixtures, teams, squads) is bundled with the app at build time. Live scores overlay on top of the seed via a Firestore `onSnapshot` listener — all views consume a unified data model and never branch on whether data is live or static.
 
-The server-side score poller runs independently, writes to a single Firestore document, and the frontend listens for changes. One document means one Firestore read per connected user per match update — cost doesn't grow with the number of live matches.
+A VPS poller fetches live scores every 20 seconds during active matches (300 seconds when idle) and writes diffs to a single Firestore document. One document means one Firestore read per connected user per match update — cost doesn't grow with the number of live matches or users.
+
+Push notifications are delivered via **FCM topics** — each user is subscribed to a topic per match they follow. GOAL, KICKOFF, HT and FULLTIME events are broadcast to all subscribers in a single FCM call regardless of subscriber count. Reminder pushes are sent directly to each device token at the user's chosen time. All push logic runs server-side — the browser never polls.
 
 ---
 
